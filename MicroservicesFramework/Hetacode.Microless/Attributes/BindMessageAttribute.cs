@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Service.Core.Attributes
+namespace Hetacode.Microless.Attributes
 {
     public class BindMessageAttribute : Attribute
     {

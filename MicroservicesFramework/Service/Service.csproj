@@ -12,10 +12,12 @@
   <ItemGroup>
     <Folder Include="Functions\" />
     <Folder Include="Core\" />
-    <Folder Include="Core\Attributes\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Contracts\Contracts.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Hetacode.Microless\Hetacode.Microless.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>

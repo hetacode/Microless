@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Service.Core
+namespace Hetacode.Microless.Core
 {
     public class Context
     {

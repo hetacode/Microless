@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Hetacode.Microless.Attributes;
+using Hetacode.Microless.Core;
 using Microsoft.Extensions.DependencyInjection;
-using Service.Core.Attributes;
 
-namespace Service.Core
+namespace Hetacode.Microless.Managers
 {
     public class FunctionsManager
     {
@@ -17,7 +18,7 @@ namespace Service.Core
 
         public void ScaffoldFunctions()
         {
-            var methods = Assembly.GetAssembly(typeof(Startup))
+            var methods = Assembly.GetEntryAssembly()
                                   .GetTypes()
                                   .SelectMany(a => a.GetMethods())
                                   .Where(w => w.GetCustomAttributes().Any(a => a.GetType() == typeof(BindMessageAttribute)))
@@ -41,10 +42,5 @@ namespace Service.Core
                 var result = await (dynamic)method.Invoke(functionInstance, parameters);
             }
         }
-
-        //public MethodInfo GetFunction(Type messageType)
-        //{
-        //    return _functions[messageType];
-        //}
     }
 }

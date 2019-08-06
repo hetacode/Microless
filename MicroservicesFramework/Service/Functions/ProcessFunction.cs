@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Contracts;
-using Service.Core;
-using Service.Core.Attributes;
+using Hetacode.Microless.Attributes;
+using Hetacode.Microless.Core;
 
 namespace Service.Functions
 {

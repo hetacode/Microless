@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{B66F0539-E085-498B-9433-7DC6AD0C8123}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hetacode.Microless", "Hetacode.Microless\Hetacode.Microless.csproj", "{6E8C3629-C289-42DC-B055-6FFDC967D01D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,5 +27,9 @@ Global
 		{B66F0539-E085-498B-9433-7DC6AD0C8123}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B66F0539-E085-498B-9433-7DC6AD0C8123}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B66F0539-E085-498B-9433-7DC6AD0C8123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E8C3629-C289-42DC-B055-6FFDC967D01D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E8C3629-C289-42DC-B055-6FFDC967D01D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E8C3629-C289-42DC-B055-6FFDC967D01D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E8C3629-C289-42DC-B055-6FFDC967D01D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

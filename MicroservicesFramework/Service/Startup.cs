@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hetacode.Microless.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,8 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using Service.Core;
-
 namespace Service
 {
     public class Startup
@@ -21,11 +20,7 @@ namespace Service
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<FunctionsManager>();
-            services.Scan(s => s.FromAssemblyOf<Startup>()
-                                .AddClasses(c => c.Where(w => w.FullName.EndsWith("Function", StringComparison.CurrentCultureIgnoreCase)))
-                                .AsSelf()
-                                .WithTransientLifetime());
+            services.AddMicroless();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,6 +32,7 @@ namespace Service
             }
 
             app.UseRouting();
+            app.UseMicroless();
 
             app.UseEndpoints(endpoints =>
             {
@@ -61,10 +57,7 @@ namespace Service
             channel.BasicConsume(queueName, true, consumer);
 
             /// TESTTS
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                scope.ServiceProvider.GetService<FunctionsManager>().ScaffoldFunctions();
-            }
+
         }
 
         private void Consumer_Received(object sender, BasicDeliverEventArgs e)
