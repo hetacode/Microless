@@ -11,6 +11,7 @@
     <Folder Include="Attributes\" />
     <Folder Include="Managers\" />
     <Folder Include="Extensions\" />
+    <Folder Include="MessageBus\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DLB.PushNotifications.Firebase" Version="1.0.1" />
@@ -18,5 +19,8 @@
     <PackageReference Include="Scrutor" Version="3.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.6.0-preview7.19362.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hetacode.Microless.Abstractions\Hetacode.Microless.Abstractions.csproj" />
   </ItemGroup>
 </Project>

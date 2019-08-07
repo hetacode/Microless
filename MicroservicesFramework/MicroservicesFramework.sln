@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hetacode.Microless", "Hetacode.Microless\Hetacode.Microless.csproj", "{6E8C3629-C289-42DC-B055-6FFDC967D01D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hetacode.Microless.Abstractions", "Hetacode.Microless.Abstractions\Hetacode.Microless.Abstractions.csproj", "{F451B4FB-B7FA-48FF-9F70-CA89E84A0936}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hetacode.Microless.RabbitMQ", "Hetacode.Microless.RabbitMQ\Hetacode.Microless.RabbitMQ.csproj", "{3AD7AC97-70FA-43B4-A67E-28397858D159}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +35,13 @@ Global
 		{6E8C3629-C289-42DC-B055-6FFDC967D01D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E8C3629-C289-42DC-B055-6FFDC967D01D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E8C3629-C289-42DC-B055-6FFDC967D01D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F451B4FB-B7FA-48FF-9F70-CA89E84A0936}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F451B4FB-B7FA-48FF-9F70-CA89E84A0936}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F451B4FB-B7FA-48FF-9F70-CA89E84A0936}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F451B4FB-B7FA-48FF-9F70-CA89E84A0936}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AD7AC97-70FA-43B4-A67E-28397858D159}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AD7AC97-70FA-43B4-A67E-28397858D159}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AD7AC97-70FA-43B4-A67E-28397858D159}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AD7AC97-70FA-43B4-A67E-28397858D159}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

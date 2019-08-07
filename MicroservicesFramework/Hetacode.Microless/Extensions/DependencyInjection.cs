@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
+using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Managers;
+using Hetacode.Microless.MessageBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +19,15 @@ namespace Hetacode.Microless.Extensions
                                 .AddClasses(c => c.Where(w => w.FullName.EndsWith("Function", StringComparison.CurrentCultureIgnoreCase)))
                                 .AsSelf()
                                 .WithTransientLifetime());
+        }
+
+        public static void AddMessageBus(this IServiceCollection services, Action<IBusConfiguration> configuration)
+        {
+            var configurationInstance = new BusConfiguration();
+            configuration(configurationInstance);
+
+            var bus = new MessageBusContainer(configurationInstance);
+            services.AddSingleton(bus);
         }
 
         public static void UseMicroless(this IApplicationBuilder app)
