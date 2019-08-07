@@ -25,10 +25,6 @@ namespace Service
             services.AddMessageBus(config =>
             {
                 config.Provider = new RabbitMQProvider("192.168.8.140", "guest", "guest", "saga");
-                config.AddReceiver("Service", (message) =>
-                {
-                    Console.WriteLine(JsonConvert.SerializeObject(message));
-                });
             });
         }
 
@@ -48,6 +44,13 @@ namespace Service
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Hello World!");
+                });
+            });
+            app.UseMessageBus(subscribe =>
+            {
+                subscribe.AddReceiver("Service", (message) =>
+                {
+                    Console.WriteLine(JsonConvert.SerializeObject(message));
                 });
             });
         }

@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Hetacode.Microless.Abstractions.Filters;
 using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Extensions;
 using Newtonsoft.Json;
 
 namespace Hetacode.Microless.MessageBus
 {
-    public class BusConfiguration : IBusConfiguration
+    public class BusConfiguration : IBusConfiguration, IBusSubscriptions
     {
         private IQueueProvider provider;
+
+        public BusConfiguration(IFiltersManager filtersManager)
+            => Filters = filtersManager;
 
         public IQueueProvider Provider
         {
@@ -19,6 +23,8 @@ namespace Hetacode.Microless.MessageBus
                 provider.Init();
             }
         }
+
+        public IFiltersManager Filters { get; }
 
         public void AddReceiver(string name, Action<object> messageCallback)
         {

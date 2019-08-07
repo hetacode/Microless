@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Hetacode.Microless.Abstractions.Filters;
 using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Managers;
 using Hetacode.Microless.MessageBus;
@@ -23,11 +24,16 @@ namespace Hetacode.Microless.Extensions
 
         public static void AddMessageBus(this IServiceCollection services, Action<IBusConfiguration> configuration)
         {
-            var configurationInstance = new BusConfiguration();
-            configuration(configurationInstance);
+            var filters = new FiltersManager(services);
+            var config = new BusConfiguration(filters);
+            configuration(config);
 
-            var bus = new MessageBusContainer(configurationInstance);
-            services.AddSingleton(bus);
+            services.AddSingleton<IBusConfiguration>(config);
+            services.AddSingleton<IBusSubscriptions>(config);
+
+            //services.AddSingleton<IFiltersManager, FiltersManager>();
+            //services.AddSingleton<IBusConfiguration, BusConfiguration>();
+            services.AddSingleton<MessageBusContainer>();
         }
 
         public static void UseMicroless(this IApplicationBuilder app)
@@ -35,6 +41,15 @@ namespace Hetacode.Microless.Extensions
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 scope.ServiceProvider.GetService<FunctionsManager>().ScaffoldFunctions();
+            }
+        }
+
+        public static void UseMessageBus(this IApplicationBuilder app, Action<IBusSubscriptions> subscribe)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var bus = scope.ServiceProvider.GetService<IBusSubscriptions>();
+                subscribe(bus);
             }
         }
     }

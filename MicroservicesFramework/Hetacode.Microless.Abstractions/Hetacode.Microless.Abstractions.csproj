@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="MessageBus\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Class1.cs" />
