@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Contracts;
+using Hetacode.Microless;
 using Hetacode.Microless.Attributes;
-using Hetacode.Microless.Core;
 using Hetacode.Microless.MessageBus;
+using Newtonsoft.Json;
 
 namespace Service.Functions
 {
@@ -17,9 +18,9 @@ namespace Service.Functions
         [BindMessage(typeof(MessageRequest))]
         public async Task Run(Context context, MessageRequest message)
         {
-            Console.WriteLine($"ProcessFunction called : ${message.CorrelationId}");
+            Console.WriteLine($"ProcessFunction called : {message.CorrelationId} - {JsonConvert.SerializeObject(context.Headers)}");
 
-            _bus.Send("Saga", new MessageResponse { CorrelationId = message.CorrelationId, Time = DateTime.Now });
+            _bus.Send("Saga", new MessageResponse { CorrelationId = message.CorrelationId, Time = DateTime.Now }, context.Headers);
         }
     }
 }

@@ -30,9 +30,9 @@ namespace Hetacode.Microless.MessageBus
 
         public IFiltersManager Filters { get; }
 
-        public void AddReceiver(string name, Action<object> messageCallback)
+        public void AddReceiver(string name, Action<object, Dictionary<string, string>> messageCallback)
         {
-            Provider.AddReceiver(name, async json =>
+            Provider.AddReceiver(name, async (json, headers) =>
             {
                 //TODO: move to some helper
                 var rawMessage = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
@@ -41,11 +41,11 @@ namespace Hetacode.Microless.MessageBus
 
                 message = await Filters.ProcessIncoming(message);
 
-                messageCallback(message);
+                messageCallback(message, headers);
             });
         }
 
-        public void Send(string name, object message)
+        public void Send(string name, object message, Dictionary<string, string> headers = null)
         {
             //TODO: move to some helper
             var type = message.GetType().AssemblyQualifiedName;
@@ -53,7 +53,7 @@ namespace Hetacode.Microless.MessageBus
             dynamicMessage.TryAdd("_type", type);
             var json = JsonConvert.SerializeObject(dynamicMessage);
 
-            Provider.Send(name, json);
+            Provider.Send(name, json, headers);
         }
     }
 }

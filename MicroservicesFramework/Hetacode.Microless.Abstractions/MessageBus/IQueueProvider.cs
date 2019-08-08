@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hetacode.Microless.Abstractions.MessageBus
@@ -7,9 +8,9 @@ namespace Hetacode.Microless.Abstractions.MessageBus
     {
         void Init();
 
-        void AddReceiver(string name, Action<string> messageCallback);
+        void AddReceiver(string name, Action<string, Dictionary<string, string>> messageCallback);
 
-        void Send(string name, string jsonMessage);
+        void Send(string name, string jsonMessage, Dictionary<string, string> headers = null);
 
     }
 }

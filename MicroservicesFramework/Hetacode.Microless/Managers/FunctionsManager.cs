@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Hetacode.Microless.Abstractions.Managers;
+using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Attributes;
-using Hetacode.Microless.Core;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hetacode.Microless.Managers
@@ -32,14 +32,17 @@ namespace Hetacode.Microless.Managers
             });
         }
 
-        public async Task CallFunction<T>(T message)
+        public async Task CallFunction<T>(T message, Dictionary<string, string> headers = null)
         {
             var method = _functions[message.GetType()];
             var serviceType = method.DeclaringType;
             using (var scope = _services.CreateScope())
             {
+                var busSubscriptions = scope.ServiceProvider.GetService<IBusSubscriptions>();
                 var functionInstance = scope.ServiceProvider.GetService(serviceType);
-                var parameters = new object[] { new Context(), message };
+                var context = new Context(busSubscriptions);
+                context.Headers = headers;
+                var parameters = new object[] { context, message };
                 var result = await (dynamic)method.Invoke(functionInstance, parameters);
             }
         }
