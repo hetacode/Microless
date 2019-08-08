@@ -17,7 +17,8 @@ namespace Hetacode.Microless.MessageBus
 
         public IQueueProvider Provider
         {
-            get => provider; set
+            get => provider;
+            set
             {
                 provider = value;
                 provider.Init();
@@ -28,12 +29,15 @@ namespace Hetacode.Microless.MessageBus
 
         public void AddReceiver(string name, Action<object> messageCallback)
         {
-            Provider.AddReceiver(name, json =>
+            Provider.AddReceiver(name, async json =>
             {
                 //TODO: move to some helper
                 var rawMessage = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
                 var type = rawMessage["_type"];
                 var message = JsonConvert.DeserializeObject(json, Type.GetType(type));
+
+                message = await Filters.ProcessIncoming(message);
+
                 messageCallback(message);
             });
         }

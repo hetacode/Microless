@@ -24,16 +24,26 @@ namespace Hetacode.Microless.Extensions
 
         public static void AddMessageBus(this IServiceCollection services, Action<IBusConfiguration> configuration)
         {
-            var filters = new FiltersManager(services);
-            var config = new BusConfiguration(filters);
-            configuration(config);
+            services.AddSingleton<IFiltersManager>(o =>
+            {
+                var serviceProvider = o.GetService<IServiceProvider>();
+                return new FiltersManager(serviceProvider, services);
+            });
 
-            services.AddSingleton<IBusConfiguration>(config);
-            services.AddSingleton<IBusSubscriptions>(config);
+            services.AddSingleton<BusConfiguration>();
+            services.AddSingleton<IBusConfiguration>(c => c.GetService<BusConfiguration>());
+            services.AddSingleton<IBusSubscriptions>(c => c.GetService<BusConfiguration>());
 
-            //services.AddSingleton<IFiltersManager, FiltersManager>();
-            //services.AddSingleton<IBusConfiguration, BusConfiguration>();
-            services.AddSingleton<MessageBusContainer>();
+            services.AddSingleton(o =>
+            {
+                using (var scope = o.CreateScope())
+                {
+                    var config = scope.ServiceProvider.GetService<IBusConfiguration>();
+                    configuration(config);
+                    var sub = scope.ServiceProvider.GetService<IBusSubscriptions>();
+                    return new MessageBusContainer(sub);
+                }
+            });
         }
 
         public static void UseMicroless(this IApplicationBuilder app)
@@ -48,8 +58,9 @@ namespace Hetacode.Microless.Extensions
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var bus = scope.ServiceProvider.GetService<IBusSubscriptions>();
-                subscribe(bus);
+                scope.ServiceProvider.GetService<MessageBusContainer>();
+                var busConfig = scope.ServiceProvider.GetService<IBusSubscriptions>();
+                subscribe(busConfig);
             }
         }
     }

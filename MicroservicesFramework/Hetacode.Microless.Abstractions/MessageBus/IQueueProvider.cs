@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 namespace Hetacode.Microless.Abstractions.MessageBus
 {
     public interface IQueueProvider
