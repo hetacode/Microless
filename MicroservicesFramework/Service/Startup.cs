@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hetacode.Microless.Extensions;
+using Hetacode.Microless.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,10 @@ namespace Service
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMicroless();
+            services.AddMessageBus(config =>
+            {
+                config.Provider = new RabbitMQProvider("192.168.8.140", "guest", "guest", "saga");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,31 +46,13 @@ namespace Service
                     await context.Response.WriteAsync("Hello World!");
                 });
             });
-
-            var factory = new ConnectionFactory
+            app.UseMessageBus((functions, subscribe) =>
             {
-                HostName = "192.168.8.140",
-                VirtualHost = "saga",
-                UserName = "guest",
-                Password = "guest"
-            };
-            var channel = factory.CreateConnection().CreateModel();
-            var queueName = "Service";
-            channel.QueueDeclare(queueName, false, false, true, null);
-            var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += Consumer_Received;
-            channel.BasicConsume(queueName, true, consumer);
-
-            /// TESTTS
-
-        }
-
-        private void Consumer_Received(object sender, BasicDeliverEventArgs e)
-        {
-            var jsonMessage = Encoding.UTF8.GetString(e.Body);
-            var rawMessage = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonMessage);
-            var type = rawMessage["_type"];
-            var message = JsonConvert.DeserializeObject(jsonMessage, Type.GetType(type));
+                subscribe.AddReceiver("Service", (message) =>
+                {
+                    functions.CallFunction(message);
+                });
+            });
         }
     }
 }
