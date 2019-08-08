@@ -46,11 +46,11 @@ namespace Service
                     await context.Response.WriteAsync("Hello World!");
                 });
             });
-            app.UseMessageBus(subscribe =>
+            app.UseMessageBus((functions, subscribe) =>
             {
                 subscribe.AddReceiver("Service", (message) =>
                 {
-                    Console.WriteLine(JsonConvert.SerializeObject(message));
+                    functions.CallFunction(message);
                 });
             });
         }

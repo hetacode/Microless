@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Hetacode.Microless.Abstractions.Managers;
 using Hetacode.Microless.Attributes;
 using Hetacode.Microless.Core;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Hetacode.Microless.Managers
 {
-    public class FunctionsManager
+    public class FunctionsManager : IFunctionsManager
     {
         private readonly Dictionary<Type, MethodInfo> _functions = new Dictionary<Type, MethodInfo>();
         private readonly IServiceProvider _services;

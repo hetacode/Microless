@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Hetacode.Microless.Abstractions.Filters;
+using Hetacode.Microless.Abstractions.Managers;
 using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Managers;
 using Hetacode.Microless.MessageBus;
@@ -13,10 +14,10 @@ namespace Hetacode.Microless.Extensions
     {
         public static void AddMicroless(this IServiceCollection services)
         {
-            services.AddSingleton<FunctionsManager>();
+            services.AddSingleton<IFunctionsManager, FunctionsManager>();
 
             // Register all Functions
-            services.Scan(s => s.FromAssemblies(Assembly.GetAssembly(services.GetType()))
+            services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
                                 .AddClasses(c => c.Where(w => w.FullName.EndsWith("Function", StringComparison.CurrentCultureIgnoreCase)))
                                 .AsSelf()
                                 .WithTransientLifetime());
@@ -50,17 +51,18 @@ namespace Hetacode.Microless.Extensions
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                scope.ServiceProvider.GetService<FunctionsManager>().ScaffoldFunctions();
+                scope.ServiceProvider.GetService<IFunctionsManager>().ScaffoldFunctions();
             }
         }
 
-        public static void UseMessageBus(this IApplicationBuilder app, Action<IBusSubscriptions> subscribe)
+        public static void UseMessageBus(this IApplicationBuilder app, Action<IFunctionsManager, IBusSubscriptions> subscribe)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 scope.ServiceProvider.GetService<MessageBusContainer>();
+                var functionsManager = scope.ServiceProvider.GetService<IFunctionsManager>();
                 var busConfig = scope.ServiceProvider.GetService<IBusSubscriptions>();
-                subscribe(busConfig);
+                subscribe(functionsManager, busConfig);
             }
         }
     }

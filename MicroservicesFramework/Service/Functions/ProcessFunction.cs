@@ -11,7 +11,7 @@ namespace Service.Functions
         [BindMessage(typeof(MessageRequest))]
         public async Task Run(Context context, MessageRequest message)
         {
-
+            Console.WriteLine($"ProcessFunction called : ${message.CorrelationId}");
         }
     }
 }

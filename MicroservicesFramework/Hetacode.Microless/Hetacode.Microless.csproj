@@ -12,6 +12,7 @@
     <Folder Include="Managers\" />
     <Folder Include="Extensions\" />
     <Folder Include="MessageBus\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DLB.PushNotifications.Firebase" Version="1.0.1" />
