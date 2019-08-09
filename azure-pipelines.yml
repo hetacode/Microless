@@ -17,3 +17,4 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
+    configuration: --Release
