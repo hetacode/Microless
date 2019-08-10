@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Hetacode.Microless.Abstractions.MessageBus;
 using RabbitMQ.Client;
@@ -32,7 +33,7 @@ namespace Hetacode.Microless.RabbitMQ
 
         }
 
-        public void AddReceiver(string name, Action<string> messageCallback)
+        public void AddReceiver(string name, Action<string, Dictionary<string, string>> messageCallback)
         {
             IModel channel;
             if (!_channels.ContainsKey(name))
@@ -48,7 +49,7 @@ namespace Hetacode.Microless.RabbitMQ
             _channels[name] = channel;
         }
 
-        public void Send(string name, string jsonMessage)
+        public void Send(string name, string jsonMessage, Dictionary<string, string> headers = null)
         {
             IModel channel;
             if (!_channels.ContainsKey(name))
@@ -61,8 +62,15 @@ namespace Hetacode.Microless.RabbitMQ
                 channel = _channels[name];
             }
 
+            IBasicProperties props = null;
+            if (headers != null)
+            {
+                props = channel.CreateBasicProperties();
+                props.Headers = headers.ToDictionary(v => v.Key, v => Encoding.UTF8.GetBytes(v.Value) as object);
+            }
+
             var body = Encoding.UTF8.GetBytes(jsonMessage);
-            channel.BasicPublish("", name, null, body);
+            channel.BasicPublish("", name, props, body);
         }
     }
 }

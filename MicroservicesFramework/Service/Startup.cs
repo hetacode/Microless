@@ -48,9 +48,9 @@ namespace Service
             });
             app.UseMessageBus((functions, subscribe) =>
             {
-                subscribe.AddReceiver("Service", (message) =>
+                subscribe.AddReceiver("Service", (message, headers) =>
                 {
-                    functions.CallFunction(message);
+                    functions.CallFunction(message, headers);
                 });
             });
         }

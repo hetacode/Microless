@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hetacode.Microless.Abstractions.MessageBus;
 
 namespace Hetacode.Microless.MessageBus
@@ -9,9 +10,9 @@ namespace Hetacode.Microless.MessageBus
 
         public MessageBusContainer(IBusSubscriptions configuration) => _configuration = configuration;
 
-        public void Send(string name, object message)
+        public void Send(string name, object message, Dictionary<string, string> headers = null)
         {
-            _configuration.Send(name, message);
+            _configuration.Send(name, message, headers);
         }
     }
 }
