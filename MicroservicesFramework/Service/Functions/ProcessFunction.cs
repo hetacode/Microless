@@ -10,17 +10,12 @@ namespace Service.Functions
 {
     public class ProcessFunction
     {
-        private readonly MessageBusContainer _bus;
-
-        public ProcessFunction(MessageBusContainer bus)
-            => _bus = bus;
-
         [BindMessage(typeof(MessageRequest))]
         public async Task Run(Context context, MessageRequest message)
         {
             Console.WriteLine($"ProcessFunction called : {message.CorrelationId} - {JsonConvert.SerializeObject(context.Headers)}");
 
-            _bus.Send("Saga", new MessageResponse { CorrelationId = message.CorrelationId, Time = DateTime.Now }, context.Headers);
+            context.SendResponse("Saga", new MessageResponse { CorrelationId = message.CorrelationId, Time = DateTime.Now }, context.Headers);
         }
     }
 }
