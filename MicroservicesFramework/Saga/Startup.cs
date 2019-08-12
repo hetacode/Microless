@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Saga.Sagas;
 using Saga.StateMachine;
-using Saga.StateMachine.Managers;
 
 namespace Saga
 {
@@ -28,10 +27,10 @@ namespace Saga
                 config.Provider = new RabbitMQProvider("192.168.8.140", "guest", "guest", "saga");
             });
 
-            services.AddSingleton<StepsManager>();
-            services.AddSingleton<StatesBuilder>();
+            //services.AddSingleton<StepsManager>();
+            //services.AddSingleton<StatesBuilder>();
 
-            services.AddTransient<TestMessagesSaga>();
+            //services.AddTransient<TestMessagesSaga>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,10 +54,10 @@ namespace Saga
             {
                 subscribe.AddReceiver("Saga", (message, headers) =>
                 {
-                    var steps = app.ApplicationServices.GetService<StepsManager>();
-                    var step = steps.Get(message);
-                    var bus = app.ApplicationServices.GetService<IBusSubscriptions>();
-                    step(new Hetacode.Microless.Context(bus), message);
+                    //var steps = app.ApplicationServices.GetService<StepsManager>();
+                    //var step = steps.Get(message);
+                    //var bus = app.ApplicationServices.GetService<IBusSubscriptions>();
+                    //step(new Hetacode.Microless.Context(bus), message);
                 });
             });
 

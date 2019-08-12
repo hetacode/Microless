@@ -19,12 +19,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="StateMachine\" />
-    <Folder Include="StateMachine\Interfaces\" />
     <Folder Include="Sagas\" />
-    <Folder Include="StateMachine\Managers\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="StateMachine\Interfaces\IWhen.cs" />
+    <Compile Remove="StateMachine\State.cs" />
   </ItemGroup>
 </Project>

@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using Hetacode.Microless.Abstractions.Managers;
 using Hetacode.Microless.Abstractions.MessageBus;
+using Hetacode.Microless.Abstractions.Messaging;
 
 namespace Hetacode.Microless
 {
-    public class Context
+    public class Context : IContext
     {
         private readonly IBusSubscriptions _subscription;
 
