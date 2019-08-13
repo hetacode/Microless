@@ -8,5 +8,21 @@
     <ProjectReference Include="..\Hetacode.Microless\Hetacode.Microless.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\Contracts\Contracts.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Hetacode.Microless.RabbitMQ\Hetacode.Microless.RabbitMQ.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\Hetacode.Microless.Abstractions\Hetacode.Microless.Abstractions.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sagas\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="StateMachine\Interfaces\IWhen.cs" />
+    <Compile Remove="StateMachine\State.cs" />
   </ItemGroup>
 </Project>
