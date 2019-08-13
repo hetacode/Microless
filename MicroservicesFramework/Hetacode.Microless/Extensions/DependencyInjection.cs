@@ -19,7 +19,7 @@ namespace Hetacode.Microless.Extensions
         {
             services.AddSingleton<IFunctionsManager, FunctionsManager>();
             services.AddSingleton<IStepsManager, StepsManager>();
-            services.AddSingleton<IStatesBuilder, StatesBuilder>();
+            services.AddSingleton<IAggregatorBuilder, AggregatorBuilder>();
 
             // Register all Functions
             services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())

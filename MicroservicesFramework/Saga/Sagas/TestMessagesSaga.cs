@@ -9,9 +9,9 @@ namespace Saga.Sagas
 {
     public class TestMessagesSaga : IAggregator
     {
-        private readonly IStatesBuilderInitializer _states;
+        private readonly IAggregatorBuilderInitializer _states;
 
-        public TestMessagesSaga(IStatesBuilder states)
+        public TestMessagesSaga(IAggregatorBuilder states)
         {
             _states = states.Init(c =>
             {
