@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 
 namespace Service.Functions
 {
+    [BindMessage(typeof(MessageRequest))]
     public class ProcessFunction
     {
-        [BindMessage(typeof(MessageRequest))]
         public async Task Run(Context context, MessageRequest message)
         {
             Console.WriteLine($"ProcessFunction called : {context.CorrelationId} - {JsonConvert.SerializeObject(context.Headers)}");
