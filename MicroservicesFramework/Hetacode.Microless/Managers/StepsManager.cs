@@ -32,6 +32,7 @@ namespace Hetacode.Microless.Managers
         {
             var context = new Context(_bus);
             context.Headers = headers;
+            context.CorrelationId = context.GetCorrelationIdFromHeader();
             _steps[message.GetType()](context, message);
         }
 
@@ -39,6 +40,7 @@ namespace Hetacode.Microless.Managers
         {
             var context = new Context(_bus);
             context.Headers = headers;
+            context.CorrelationId = context.GetCorrelationIdFromHeader();
             var aggregator = _services.GetService<TAggregator>();
             aggregator.Run(context);
 

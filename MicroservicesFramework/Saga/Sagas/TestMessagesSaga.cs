@@ -17,11 +17,11 @@ namespace Saga.Sagas
             {
                 var id = Guid.NewGuid();
                 Console.WriteLine($"Init saga: {id}");
-                c.SendResponse<MessageRequest>("Service", new MessageRequest { CorrelationId = id });
+                c.SendResponse<MessageRequest>("Service", new MessageRequest());
             })
             .Step<MessageResponse>((c, r) =>
             {
-                Console.WriteLine($"Response saga: {r.CorrelationId}");
+                Console.WriteLine($"Response saga: {c.CorrelationId}");
             });
         }
 

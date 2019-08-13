@@ -19,7 +19,11 @@ namespace Saga.StateMachine
 
         public IAggregatorBuilderInitializer Init<TMessage>(Action<IContext, TMessage> response)
         {
-            _manager.RegisterStep(typeof(TMessage), (c, m) => response(c, (TMessage)m));
+            _manager.RegisterStep(typeof(TMessage), (c, m) =>
+            {
+                c.CorrelationId = Guid.NewGuid();
+                response(c, (TMessage)m);
+            });
             return this;
         }
 
@@ -46,8 +50,15 @@ namespace Saga.StateMachine
             return this;
         }
 
+        public IAggregatorBuilderInitializer Rollback<TErrorMessage>(Action<IContext, TErrorMessage> response)
+        {
+            _manager.RegisterStep(typeof(TErrorMessage), (c, m) => response(c, (TErrorMessage)m));
+            return this;
+        }
+
         public void Call(IContext context)
         {
+            context.CorrelationId = Guid.NewGuid();
             _initCall(context);
         }
     }

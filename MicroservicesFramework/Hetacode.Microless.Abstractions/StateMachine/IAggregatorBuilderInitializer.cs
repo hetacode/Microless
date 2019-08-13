@@ -12,6 +12,8 @@ namespace Hetacode.Microless.Abstractions.StateMachine
 
         IAggregatorBuilderInitializer Finish();
 
+        IAggregatorBuilderInitializer Rollback<TErrorMessage>(Action<IContext, TErrorMessage> response);
+
         void Call(IContext context);
     }
 }

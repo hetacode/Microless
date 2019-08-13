@@ -42,6 +42,7 @@ namespace Hetacode.Microless.Managers
                 var functionInstance = scope.ServiceProvider.GetService(serviceType);
                 var context = new Context(busSubscriptions);
                 context.Headers = headers;
+                context.CorrelationId = context.GetCorrelationIdFromHeader();
                 var parameters = new object[] { context, message };
                 var result = await (dynamic)method.Invoke(functionInstance, parameters);
             }
