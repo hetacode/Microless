@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hetacode.Microless.Abstractions.Managers;
 using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Extensions;
 using Hetacode.Microless.RabbitMQ;
@@ -26,11 +27,6 @@ namespace Saga
             {
                 config.Provider = new RabbitMQProvider("192.168.8.140", "guest", "guest", "saga");
             });
-
-            //services.AddSingleton<StepsManager>();
-            //services.AddSingleton<StatesBuilder>();
-
-            //services.AddTransient<TestMessagesSaga>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,7 +43,11 @@ namespace Saga
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    using (var scope = endpoints.ServiceProvider.CreateScope())
+                    {
+                        var manager = scope.ServiceProvider.GetService<IStepsManager>();
+                        manager.InitCall<TestMessagesSaga>();
+                    }
                 });
             });
             app.UseMessageBus((steps, subscribe) =>

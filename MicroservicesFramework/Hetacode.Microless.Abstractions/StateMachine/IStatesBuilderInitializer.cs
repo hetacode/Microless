@@ -8,8 +8,10 @@ namespace Hetacode.Microless.Abstractions.StateMachine
     {
         IStatesBuilderInitializer Step<TMessage>(Action<IContext, TMessage> response);
 
-        void Finish<TMessage>(Action<IContext, TMessage> response);
+        IStatesBuilderInitializer Finish<TMessage>(Action<IContext, TMessage> response);
 
-        void Finish();
+        IStatesBuilderInitializer Finish();
+
+        void Call(IContext context);
     }
 }

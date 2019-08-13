@@ -12,18 +12,20 @@ namespace Saga.StateMachine
     {
         private readonly IStepsManager _manager;
         private readonly IBusSubscriptions _bus;
+        private Action<IContext> _initCall;
 
         public StatesBuilder(IStepsManager manager, IBusSubscriptions bus)
             => (_manager, _bus) = (manager, bus);
 
-        public IStatesBuilderInitializer Init()
+        public IStatesBuilderInitializer Init<TMessage>(Action<IContext, TMessage> response)
         {
+            _manager.RegisterStep(typeof(TMessage), (c, m) => response(c, (TMessage)m));
             return this;
         }
 
         public IStatesBuilderInitializer Init(Action<IContext> init)
         {
-            //init.Invoke(new Context(_bus));
+            _initCall = init;
             return this;
         }
 
@@ -33,13 +35,20 @@ namespace Saga.StateMachine
             return this;
         }
 
-        public void Finish<TMessage>(Action<IContext, TMessage> response)
+        public IStatesBuilderInitializer Finish<TMessage>(Action<IContext, TMessage> response)
         {
             _manager.RegisterStep(typeof(TMessage), (c, m) => response(c, (TMessage)m));
+            return this;
         }
 
-        public void Finish()
+        public IStatesBuilderInitializer Finish()
         {
+            return this;
+        }
+
+        public void Call(IContext context)
+        {
+            _initCall(context);
         }
     }
 }

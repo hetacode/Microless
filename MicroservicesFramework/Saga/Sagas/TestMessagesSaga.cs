@@ -1,14 +1,19 @@
 ﻿using System;
 using Contracts;
+using Hetacode.Microless.Abstractions.Messaging;
+using Hetacode.Microless.Abstractions.StateMachine;
+using Hetacode.Microless.Attributes;
 using Saga.StateMachine;
 
 namespace Saga.Sagas
 {
-    public class TestMessagesSaga
+    public class TestMessagesSaga : IAggregator
     {
-        public TestMessagesSaga(StatesBuilder states)
+        private readonly IStatesBuilderInitializer _states;
+
+        public TestMessagesSaga(IStatesBuilder states)
         {
-            states.Init(c =>
+            _states = states.Init(c =>
             {
                 var id = Guid.NewGuid();
                 Console.WriteLine($"Init saga: {id}");
@@ -18,6 +23,11 @@ namespace Saga.Sagas
             {
                 Console.WriteLine($"Response saga: {r.CorrelationId}");
             });
+        }
+
+        public void Run(IContext context)
+        {
+            _states.Call(context);
         }
     }
 }
