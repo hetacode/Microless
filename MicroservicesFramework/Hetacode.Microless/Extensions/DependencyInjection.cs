@@ -65,5 +65,16 @@ namespace Hetacode.Microless.Extensions
                 subscribe(functionsManager, busConfig);
             }
         }
+
+        public static void UseMessageBus(this IApplicationBuilder app, Action<IStepsManager, IBusSubscriptions> subscribe)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                scope.ServiceProvider.GetService<MessageBusContainer>();
+                var stepsManager = scope.ServiceProvider.GetService<IStepsManager>();
+                var busConfig = scope.ServiceProvider.GetService<IBusSubscriptions>();
+                subscribe(stepsManager, busConfig);
+            }
+        }
     }
 }

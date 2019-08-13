@@ -50,14 +50,11 @@ namespace Saga
                     await context.Response.WriteAsync("Hello World!");
                 });
             });
-            app.UseMessageBus((functions, subscribe) =>
+            app.UseMessageBus((steps, subscribe) =>
             {
                 subscribe.AddReceiver("Saga", (message, headers) =>
                 {
-                    //var steps = app.ApplicationServices.GetService<StepsManager>();
-                    //var step = steps.Get(message);
-                    //var bus = app.ApplicationServices.GetService<IBusSubscriptions>();
-                    //step(new Hetacode.Microless.Context(bus), message);
+                    steps.Call(message, headers);
                 });
             });
 

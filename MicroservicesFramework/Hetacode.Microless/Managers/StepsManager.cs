@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Hetacode.Microless;
 using Hetacode.Microless.Abstractions.Managers;
+using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Abstractions.Messaging;
 
 namespace Hetacode.Microless.Managers
@@ -9,6 +10,10 @@ namespace Hetacode.Microless.Managers
     public class StepsManager : IStepsManager
     {
         private Dictionary<Type, Action<IContext, object>> _steps = new Dictionary<Type, Action<IContext, object>>();
+        private readonly IBusSubscriptions _bus;
+
+        public StepsManager(IBusSubscriptions bus)
+            => _bus = bus;
 
         public Action<Context, object> Get(object message)
         {
@@ -20,9 +25,11 @@ namespace Hetacode.Microless.Managers
             _steps.Add(stepType, action);
         }
 
-        public Action<IContext, TMessage> Get<TMessage>(TMessage message)
+        public void Call<TMessage>(TMessage message, Dictionary<string, string> headers = null)
         {
-            return new Action<IContext, TMessage>((c, m) => _steps[typeof(TMessage)](c, m));
+            var context = new Context(_bus);
+            context.Headers = headers;
+            _steps[typeof(TMessage)](context, message);
         }
     }
 }

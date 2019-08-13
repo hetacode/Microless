@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hetacode.Microless.Abstractions.Messaging;
 
 namespace Hetacode.Microless.Abstractions.Managers
@@ -7,6 +8,6 @@ namespace Hetacode.Microless.Abstractions.Managers
     {
         void RegisterStep(Type stepType, Action<IContext, object> action);
 
-        Action<IContext, TMessage> Get<TMessage>(TMessage message);
+        void Call<TMessage>(TMessage message, Dictionary<string, string> headers = null);
     }
 }
