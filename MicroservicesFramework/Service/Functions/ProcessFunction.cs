@@ -17,5 +17,10 @@ namespace Service.Functions
 
             context.SendResponse("Saga", new MessageResponse { Time = DateTime.Now }, context.Headers);
         }
+
+        public async Task Rollback(Context context, MessageRequest message)
+        {
+            Console.WriteLine($"ProcessFunction rollback : {context.CorrelationId} - {JsonConvert.SerializeObject(context.Headers)}");
+        }
     }
 }

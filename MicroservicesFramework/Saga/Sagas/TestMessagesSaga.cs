@@ -21,7 +21,17 @@ namespace Saga.Sagas
             })
             .Step<MessageResponse>((c, r) =>
             {
-                Console.WriteLine($"Response saga: {c.CorrelationId}");
+                Console.WriteLine($"Response1 saga: {c.CorrelationId}");
+                c.SendResponse<Message1Request>("Service1", new Message1Request());
+            })
+            .Step<Message1Response>((c, r) =>
+            {
+                Console.WriteLine($"Response2 saga: {c.CorrelationId}");
+                c.SendResponse<Message2Request>("Service2", new Message2Request());
+            })
+            .Finish<Message2Response>((c, r) =>
+            {
+                Console.WriteLine($"Finish saga: {c.CorrelationId}");
             });
         }
 
