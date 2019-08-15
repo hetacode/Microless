@@ -43,7 +43,20 @@ namespace Hetacode.Microless
             return Guid.Empty;
         }
 
-        public void SendResponse<T>(string name, T message, Dictionary<string, string> headers = null)
+        public void SendError<T>(string name, T message, Dictionary<string, string> headers = null)
+        {
+            if (headers == null)
+            {
+                headers = new Dictionary<string, string>();
+            }
+            if (!headers.ContainsKey(ACTION_CORRELATION_ID))
+            {
+                headers.Add(ACTION_CORRELATION_ID, CorrelationId.ToString());
+            }
+            _subscription.Send(name, message, headers);
+        }
+
+        public void SendMessage<T>(string name, T message, Dictionary<string, string> headers = null)
         {
             if (headers == null)
             {

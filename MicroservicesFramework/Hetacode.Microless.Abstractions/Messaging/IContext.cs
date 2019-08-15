@@ -11,7 +11,9 @@ namespace Hetacode.Microless.Abstractions.Messaging
 
         bool IsRollback { get; }
 
-        void SendResponse<T>(string name, T message, Dictionary<string, string> headers = null);
+        void SendMessage<T>(string name, T message, Dictionary<string, string> headers = null);
+
+        void SendError<T>(string name, T message, Dictionary<string, string> headers = null);
 
         void SendRollback<T>(string name, T message);
     }

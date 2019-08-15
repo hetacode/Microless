@@ -14,6 +14,7 @@
     <Folder Include="MessageBus\" />
     <Folder Include="Filters\" />
     <Folder Include="StateMachines\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DLB.PushNotifications.Firebase" Version="1.0.1" />

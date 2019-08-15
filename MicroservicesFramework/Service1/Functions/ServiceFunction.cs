@@ -14,7 +14,7 @@ namespace Service1.Functions
         {
             Console.WriteLine($"ProcessFunction1 called : {context.CorrelationId} - {JsonConvert.SerializeObject(context.Headers)}");
 
-            context.SendResponse("Saga", new Message1Response { Time = DateTime.Now }, context.Headers);
+            context.SendMessage("Saga", new Message1Response { Time = DateTime.Now }, context.Headers);
         }
 
         public async Task Rollback(Context context, Message1Request message)

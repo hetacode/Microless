@@ -13,21 +13,30 @@ namespace Saga.Sagas
 
         public TestMessagesSaga(IAggregatorBuilder states)
         {
-            _states = states.Init(c =>
+            _states = states.Init<MessageError>(c =>
             {
                 var id = Guid.NewGuid();
                 Console.WriteLine($"Init saga: {id}");
-                c.SendResponse<MessageRequest>("Service", new MessageRequest());
-            })
-            .Step<MessageResponse>((c, r) =>
+                c.SendMessage<MessageRequest>("Service", new MessageRequest());
+            }, (c, e) =>
+             {
+                 Console.WriteLine($"Init error id: {c.CorrelationId}");
+             })
+            .Step<MessageResponse, Message1Error>((c, r) =>
             {
                 Console.WriteLine($"Response1 saga: {c.CorrelationId}");
-                c.SendResponse<Message1Request>("Service1", new Message1Request());
+                c.SendMessage<Message1Request>("Service1", new Message1Request());
+            }, (c, e) =>
+            {
+                Console.WriteLine($"Step 1 error id: {c.CorrelationId}");
             })
-            .Step<Message1Response>((c, r) =>
+            .Step<Message1Response, Message2Error>((c, r) =>
             {
                 Console.WriteLine($"Response2 saga: {c.CorrelationId}");
-                c.SendResponse<Message2Request>("Service2", new Message2Request());
+                c.SendMessage<Message2Request>("Service2", new Message2Request());
+            }, (c, e) =>
+            {
+                Console.WriteLine($"Step 2 error id: {c.CorrelationId}");
             })
             .Finish<Message2Response>((c, r) =>
             {
