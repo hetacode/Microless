@@ -1,29 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Class1.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Attributes\" />
-    <Folder Include="Managers\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="MessageBus\" />
-    <Folder Include="Filters\" />
-    <Folder Include="StateMachines\" />
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DLB.PushNotifications.Firebase" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0-preview7.19362.4" />
-    <PackageReference Include="Scrutor" Version="3.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.6.0-preview7.19362.9" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Hetacode.Microless.Abstractions\Hetacode.Microless.Abstractions.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <PackageId>Hetacode.Microless</PackageId>
+        <Authors>Sebastian G.</Authors>
+        <Company>Hetacode</Company>
+        <RepositoryUrl>https://github.com/hetacode/Microless</RepositoryUrl>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Remove="Class1.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Attributes\" />
+        <Folder Include="Managers\" />
+        <Folder Include="Extensions\" />
+        <Folder Include="MessageBus\" />
+        <Folder Include="Filters\" />
+        <Folder Include="StateMachines\" />
+        <Folder Include="Exceptions\" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0-preview7.19362.4" />
+        <PackageReference Include="Scrutor" Version="3.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.6.0-preview7.19362.9" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Hetacode.Microless.Abstractions\Hetacode.Microless.Abstractions.csproj" />
+    </ItemGroup>
 </Project>
