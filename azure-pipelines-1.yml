@@ -1,7 +1,11 @@
-pool:
-  name: Azure Pipelines
-#Your build pipeline references an undefined variable named ‘Parameters.RestoreBuildProjects’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+trigger:
+- master
 
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
 steps:
 - task: UseDotNet@2
   displayName: 'Use .Net Core sdk 3.0.100-preview7-012821'
