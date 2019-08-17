@@ -13,7 +13,7 @@ namespace Saga.Sagas
 
         public TestMessagesSaga(IAggregatorBuilder states)
         {
-            _states = states.Init<MessageError>(c =>
+            _states = states.Init<MessageError, MessageRequest>(c =>
             {
                 var id = Guid.NewGuid();
                 Console.WriteLine($"Init saga: {id}");
@@ -21,16 +21,23 @@ namespace Saga.Sagas
             }, (c, e) =>
             {
                 Console.WriteLine($"Init error id: {c.CorrelationId}");
+            }, (c, e) =>
+            {
+                Console.WriteLine($"Rollback finished id: {c.CorrelationId}");
             })
-            .Step<MessageResponse, Message1Error>((c, r) =>
+            .Step<MessageResponse, Message1Error, Message1Request>((c, r) =>
             {
                 Console.WriteLine($"Response1 saga: {c.CorrelationId}");
                 c.SendMessage<Message1Request>("Service1", new Message1Request());
             }, (c, e) =>
             {
                 Console.WriteLine($"Step 1 error id: {c.CorrelationId}");
+            }, (c, e) =>
+            {
+                Console.WriteLine($"Rollback step1 id: {c.CorrelationId}");
+                c.SendRollback<MessageRequest>("Service", new MessageRequest());
             })
-            .Step<Message1Response, Message2Error>((c, r) =>
+            .Step<Message1Response, Message2Error, Message2Request>((c, r) =>
             {
                 Console.WriteLine($"Response2 saga: {c.CorrelationId}");
                 c.SendMessage<Message2Request>("Service2", new Message2Request());
@@ -38,6 +45,9 @@ namespace Saga.Sagas
             {
                 Console.WriteLine($"Step 2 error id: {c.CorrelationId}");
                 c.SendRollback<Message1Request>("Service1", new Message1Request());
+            }, (c, e) =>
+            {
+                Console.WriteLine($"Rollback step 2 id: {c.CorrelationId}");
             })
             .Finish<Message2Response>((c, r) =>
             {

@@ -48,7 +48,7 @@ namespace Hetacode.Microless.Managers
                 var serviceType = method.DeclaringType;
                 var functionInstance = scope.ServiceProvider.GetService(serviceType);
                 var parameters = new object[] { context, message };
-                var result = await (dynamic)method.Invoke(functionInstance, parameters);
+                await (dynamic)method.Invoke(functionInstance, parameters);
                 context.SetSenderToHeader(callerName);
                 if (context.IsRollback)
                 {

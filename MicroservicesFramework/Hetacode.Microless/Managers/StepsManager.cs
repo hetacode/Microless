@@ -12,6 +12,8 @@ namespace Hetacode.Microless.Managers
     public class StepsManager : IStepsManager
     {
         private Dictionary<Type, Action<IContext, object>> _steps = new Dictionary<Type, Action<IContext, object>>();
+        private Dictionary<Type, Action<IContext, object>> _rollbackSteps = new Dictionary<Type, Action<IContext, object>>();
+
         private readonly IServiceProvider _services;
         private readonly IBusSubscriptions _bus;
 
@@ -28,6 +30,11 @@ namespace Hetacode.Microless.Managers
             _steps.Add(stepType, action);
         }
 
+        public void RegisterRollbackStep(Type stepType, Action<IContext, object> action)
+        {
+            _rollbackSteps.Add(stepType, action);
+        }
+
         public void Call<TMessage>(string queueName, TMessage message, Dictionary<string, string> headers = null)
         {
             var context = new Context(_bus);
@@ -35,7 +42,15 @@ namespace Hetacode.Microless.Managers
             context.CorrelationId = context.GetCorrelationIdFromHeader();
             context.GetSenderFromHeader();
             context.SetSenderToHeader(queueName);
-            _steps[message.GetType()](context, message);
+
+            if (context.IsRollbackDone)
+            {
+                _rollbackSteps[message.GetType()](context, message);
+            }
+            else
+            {
+                _steps[message.GetType()](context, message);
+            }
         }
 
         public void InitCall<TAggregator>(string queueName, Dictionary<string, string> headers = null) where TAggregator : IAggregator

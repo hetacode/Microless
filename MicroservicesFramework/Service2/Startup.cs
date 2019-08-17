@@ -45,9 +45,9 @@ namespace Service2
             });
             app.UseMessageBus((functions, subscribe) =>
             {
-                subscribe.AddReceiver("Service2", (queueName, message, headers) =>
+                subscribe.AddReceiver("Service2", async (queueName, message, headers) =>
                 {
-                    functions.CallFunction(queueName, message, headers);
+                    await functions.CallFunction(queueName, message, headers);
                 });
             });
         }

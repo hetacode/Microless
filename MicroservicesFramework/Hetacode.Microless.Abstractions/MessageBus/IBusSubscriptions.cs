@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Hetacode.Microless.Abstractions.MessageBus
 {
@@ -14,7 +15,7 @@ namespace Hetacode.Microless.Abstractions.MessageBus
         /// object - message from publisher
         /// Dictionary - headers
         /// </param>
-        void AddReceiver(string name, Action<string, object, Dictionary<string, string>> messageCallback);
+        void AddReceiver(string name, Func<string, object, Dictionary<string, string>, Task> messageCallback);
 
         void Send(string name, object message, Dictionary<string, string> headers = null);
     }

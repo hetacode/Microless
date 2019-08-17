@@ -52,7 +52,7 @@ namespace Saga
             });
             app.UseMessageBus((steps, subscribe) =>
             {
-                subscribe.AddReceiver("Saga", (queueName, message, headers) =>
+                subscribe.AddReceiver("Saga", async (queueName, message, headers) =>
                 {
                     steps.Call(queueName, message, headers);
                 });

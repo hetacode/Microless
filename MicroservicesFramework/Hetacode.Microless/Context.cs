@@ -35,6 +35,18 @@ namespace Hetacode.Microless
             }
         }
 
+        public bool IsRollbackDone
+        {
+            get
+            {
+                if (Headers != null && Headers.ContainsKey(ACTION_KEY))
+                {
+                    return Headers[ACTION_KEY] == ACTION_ROLLBACK_DONE;
+                }
+                return false;
+            }
+        }
+
         public string Sender { get; private set; }
 
         public Guid GetCorrelationIdFromHeader()
@@ -103,6 +115,10 @@ namespace Hetacode.Microless
             {
                 headers.Add(ACTION_CORRELATION_ID, CorrelationId.ToString());
             }
+            if (!headers.ContainsKey(SENDER_KEY))
+            {
+                headers.Add(SENDER_KEY, Headers[SENDER_KEY]);
+            }
             _subscription.Send(name, message, headers);
         }
 
@@ -111,6 +127,10 @@ namespace Hetacode.Microless
             var headers = new Dictionary<string, string>();
             headers.Add(ACTION_KEY, ACTION_ROLLBACK_VALUE);
             headers.Add(ACTION_CORRELATION_ID, CorrelationId.ToString());
+            if (!headers.ContainsKey(SENDER_KEY))
+            {
+                headers.Add(SENDER_KEY, Headers[SENDER_KEY]);
+            }
             _subscription.Send(name, message, headers);
         }
     }

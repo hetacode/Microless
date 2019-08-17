@@ -20,7 +20,9 @@ namespace Saga.StateMachine
         public AggregatorBuilder(IStepsManager manager, IBusSubscriptions bus)
             => (_manager, _bus) = (manager, bus);
 
-        public IAggregatorBuilderInitializer Init<TMessage, TError>(Action<IContext, TMessage> response, Action<IContext, TError> error)
+        public IAggregatorBuilderInitializer Init<TMessage, TError, TRollback>(Action<IContext, TMessage> response,
+                                                                               Action<IContext, TError> error,
+                                                                               Action<IContext, TRollback> rollbackResponse)
         {
             _manager.RegisterStep(typeof(TMessage), (c, m) =>
             {
@@ -28,20 +30,27 @@ namespace Saga.StateMachine
                 response(c, (TMessage)m);
             });
             _manager.RegisterStep(typeof(TError), (c, m) => error(c, (TError)m));
+            _manager.RegisterRollbackStep(typeof(TRollback), (c, m) => rollbackResponse(c, (TRollback)m));
             return this;
         }
 
-        public IAggregatorBuilderInitializer Init<TError>(Action<IContext> init, Action<IContext, TError> error)
+        public IAggregatorBuilderInitializer Init<TError, TRollback>(Action<IContext> init,
+                                                                     Action<IContext, TError> error,
+                                                                     Action<IContext, TRollback> rollbackResponse)
         {
             _initCall = init;
             _manager.RegisterStep(typeof(TError), (c, m) => error(c, (TError)m));
+            _manager.RegisterRollbackStep(typeof(TRollback), (c, m) => rollbackResponse(c, (TRollback)m));
             return this;
         }
 
-        public IAggregatorBuilderInitializer Step<TMessage, TError>(Action<IContext, TMessage> response, Action<IContext, TError> error)
+        public IAggregatorBuilderInitializer Step<TMessage, TError, TRollback>(Action<IContext, TMessage> response,
+                                                                               Action<IContext, TError> error,
+                                                                               Action<IContext, TRollback> rollbackResponse)
         {
             _manager.RegisterStep(typeof(TMessage), (c, m) => response(c, (TMessage)m));
             _manager.RegisterStep(typeof(TError), (c, m) => error(c, (TError)m));
+            _manager.RegisterRollbackStep(typeof(TRollback), (c, m) => rollbackResponse(c, (TRollback)m));
             return this;
         }
 
