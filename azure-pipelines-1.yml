@@ -25,12 +25,7 @@ steps:
     versioningScheme: 'byBuildNumber'
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'publish'
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'internal'
     publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
-    publishWebProjects: false
-
-# - task: DotNetCoreCLI@2
-#   displayName: Publish
-#   inputs:
-#     command: push
-#     publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
