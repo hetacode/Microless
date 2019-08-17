@@ -32,7 +32,7 @@ namespace Hetacode.Microless.Managers
             });
         }
 
-        public async Task CallFunction<T>(T message, Dictionary<string, string> headers = null)
+        public async Task CallFunction<T>(string callerName, T message, Dictionary<string, string> headers = null)
         {
 
             using (var scope = _services.CreateScope())
@@ -41,6 +41,7 @@ namespace Hetacode.Microless.Managers
                 var context = new Context(busSubscriptions);
                 context.Headers = headers;
                 context.CorrelationId = context.GetCorrelationIdFromHeader();
+                context.GetSenderFromHeader();
 
                 var subKey = context.IsRollback ? "Rollback" : "Run";
                 var method = _functions[(message.GetType(), subKey)];
@@ -48,6 +49,12 @@ namespace Hetacode.Microless.Managers
                 var functionInstance = scope.ServiceProvider.GetService(serviceType);
                 var parameters = new object[] { context, message };
                 var result = await (dynamic)method.Invoke(functionInstance, parameters);
+                context.SetSenderToHeader(callerName);
+                if (context.IsRollback)
+                {
+                    context.SetMessageAsRollbackDone();
+                    context.SendMessage<T>(context.Sender, message, context.Headers); // How to get sender's queue?
+                }
             }
         }
     }

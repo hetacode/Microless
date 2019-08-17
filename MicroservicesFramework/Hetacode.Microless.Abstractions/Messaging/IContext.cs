@@ -5,6 +5,8 @@ namespace Hetacode.Microless.Abstractions.Messaging
 {
     public interface IContext
     {
+        string Sender { get; }
+
         Guid CorrelationId { get; set; }
 
         Dictionary<string, string> Headers { get; set; }

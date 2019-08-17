@@ -28,19 +28,22 @@ namespace Hetacode.Microless.Managers
             _steps.Add(stepType, action);
         }
 
-        public void Call<TMessage>(TMessage message, Dictionary<string, string> headers = null)
+        public void Call<TMessage>(string queueName, TMessage message, Dictionary<string, string> headers = null)
         {
             var context = new Context(_bus);
             context.Headers = headers;
             context.CorrelationId = context.GetCorrelationIdFromHeader();
+            context.GetSenderFromHeader();
+            context.SetSenderToHeader(queueName);
             _steps[message.GetType()](context, message);
         }
 
-        public void InitCall<TAggregator>(Dictionary<string, string> headers = null) where TAggregator : IAggregator
+        public void InitCall<TAggregator>(string queueName, Dictionary<string, string> headers = null) where TAggregator : IAggregator
         {
             var context = new Context(_bus);
             context.Headers = headers;
             context.CorrelationId = context.GetCorrelationIdFromHeader();
+            context.SetSenderToHeader(queueName);
             var aggregator = _services.GetService<TAggregator>();
             aggregator.Run(context);
 

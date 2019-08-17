@@ -46,15 +46,15 @@ namespace Saga
                     using (var scope = endpoints.ServiceProvider.CreateScope())
                     {
                         var manager = scope.ServiceProvider.GetService<IStepsManager>();
-                        manager.InitCall<TestMessagesSaga>();
+                        manager.InitCall<TestMessagesSaga>("Saga");
                     }
                 });
             });
             app.UseMessageBus((steps, subscribe) =>
             {
-                subscribe.AddReceiver("Saga", (message, headers) =>
+                subscribe.AddReceiver("Saga", (queueName, message, headers) =>
                 {
-                    steps.Call(message, headers);
+                    steps.Call(queueName, message, headers);
                 });
             });
 

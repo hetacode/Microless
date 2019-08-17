@@ -30,7 +30,7 @@ namespace Hetacode.Microless.MessageBus
 
         public IFiltersManager Filters { get; }
 
-        public void AddReceiver(string name, Action<object, Dictionary<string, string>> messageCallback)
+        public void AddReceiver(string name, Action<string, object, Dictionary<string, string>> messageCallback)
         {
             Provider.AddReceiver(name, async (json, headers) =>
             {
@@ -41,7 +41,7 @@ namespace Hetacode.Microless.MessageBus
 
                 message = await Filters.ProcessIncoming(message);
 
-                messageCallback(message, headers);
+                messageCallback(name, message, headers);
             });
         }
 

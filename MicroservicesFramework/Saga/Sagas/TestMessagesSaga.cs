@@ -19,9 +19,9 @@ namespace Saga.Sagas
                 Console.WriteLine($"Init saga: {id}");
                 c.SendMessage<MessageRequest>("Service", new MessageRequest());
             }, (c, e) =>
-             {
-                 Console.WriteLine($"Init error id: {c.CorrelationId}");
-             })
+            {
+                Console.WriteLine($"Init error id: {c.CorrelationId}");
+            })
             .Step<MessageResponse, Message1Error>((c, r) =>
             {
                 Console.WriteLine($"Response1 saga: {c.CorrelationId}");
@@ -37,6 +37,7 @@ namespace Saga.Sagas
             }, (c, e) =>
             {
                 Console.WriteLine($"Step 2 error id: {c.CorrelationId}");
+                c.SendRollback<Message1Request>("Service1", new Message1Request());
             })
             .Finish<Message2Response>((c, r) =>
             {
