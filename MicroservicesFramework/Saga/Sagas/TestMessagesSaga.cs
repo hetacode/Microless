@@ -13,39 +13,45 @@ namespace Saga.Sagas
 
         public TestMessagesSaga(IAggregatorBuilder states)
         {
-            _states = states.Init<MessageError, MessageRequest>(c =>
+            _states = states.Init(c =>
             {
                 var id = Guid.NewGuid();
                 Console.WriteLine($"Init saga: {id}");
                 c.SendMessage<MessageRequest>("Service", new MessageRequest());
-            }, (c, e) =>
+            })
+            .Error<MessageError>((c, e) =>
             {
                 Console.WriteLine($"Init error id: {c.CorrelationId}");
-            }, (c, e) =>
+            })
+            .Rollback<MessageRequest>((c, e) =>
             {
                 Console.WriteLine($"Rollback finished id: {c.CorrelationId}");
             })
-            .Step<MessageResponse, Message1Error, Message1Request>((c, r) =>
+            .Step<MessageResponse>((c, r) =>
             {
                 Console.WriteLine($"Response1 saga: {c.CorrelationId}");
                 c.SendMessage<Message1Request>("Service1", new Message1Request());
-            }, (c, e) =>
+            })
+            .Error<Message1Error>((c, e) =>
             {
                 Console.WriteLine($"Step 1 error id: {c.CorrelationId}");
-            }, (c, e) =>
+            })
+            .Rollback<Message1Request>((c, e) =>
             {
                 Console.WriteLine($"Rollback step1 id: {c.CorrelationId}");
                 c.SendRollback<MessageRequest>("Service", new MessageRequest());
             })
-            .Step<Message1Response, Message2Error, Message2Request>((c, r) =>
+            .Step<Message1Response>((c, r) =>
             {
                 Console.WriteLine($"Response2 saga: {c.CorrelationId}");
                 c.SendMessage<Message2Request>("Service2", new Message2Request());
-            }, (c, e) =>
+            })
+            .Error<Message2Error>((c, e) =>
             {
                 Console.WriteLine($"Step 2 error id: {c.CorrelationId}");
                 c.SendRollback<Message1Request>("Service1", new Message1Request());
-            }, (c, e) =>
+            })
+            .Rollback<Message2Request>((c, e) =>
             {
                 Console.WriteLine($"Rollback step 2 id: {c.CorrelationId}");
             })

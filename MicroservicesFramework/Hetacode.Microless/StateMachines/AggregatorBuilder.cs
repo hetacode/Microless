@@ -20,36 +20,36 @@ namespace Saga.StateMachine
         public AggregatorBuilder(IStepsManager manager, IBusSubscriptions bus)
             => (_manager, _bus) = (manager, bus);
 
-        public IAggregatorBuilderInitializer Init<TMessage, TError, TRollback>(Action<IContext, TMessage> response,
-                                                                               Action<IContext, TError> error,
-                                                                               Action<IContext, TRollback> rollbackResponse)
+        public IAggregatorBuilderInitializer Init<TMessage>(Action<IContext, TMessage> response)
         {
             _manager.RegisterStep(typeof(TMessage), (c, m) =>
             {
                 c.CorrelationId = Guid.NewGuid();
                 response(c, (TMessage)m);
             });
-            _manager.RegisterStep(typeof(TError), (c, m) => error(c, (TError)m));
-            _manager.RegisterRollbackStep(typeof(TRollback), (c, m) => rollbackResponse(c, (TRollback)m));
             return this;
         }
 
-        public IAggregatorBuilderInitializer Init<TError, TRollback>(Action<IContext> init,
-                                                                     Action<IContext, TError> error,
-                                                                     Action<IContext, TRollback> rollbackResponse)
+        public IAggregatorBuilderInitializer Init(Action<IContext> init)
         {
             _initCall = init;
-            _manager.RegisterStep(typeof(TError), (c, m) => error(c, (TError)m));
-            _manager.RegisterRollbackStep(typeof(TRollback), (c, m) => rollbackResponse(c, (TRollback)m));
             return this;
         }
 
-        public IAggregatorBuilderInitializer Step<TMessage, TError, TRollback>(Action<IContext, TMessage> response,
-                                                                               Action<IContext, TError> error,
-                                                                               Action<IContext, TRollback> rollbackResponse)
+        public IAggregatorBuilderInitializer Step<TMessage>(Action<IContext, TMessage> response)
         {
             _manager.RegisterStep(typeof(TMessage), (c, m) => response(c, (TMessage)m));
+            return this;
+        }
+
+        public IAggregatorBuilderInitializer Error<TError>(Action<IContext, TError> error)
+        {
             _manager.RegisterStep(typeof(TError), (c, m) => error(c, (TError)m));
+            return this;
+        }
+
+        public IAggregatorBuilderInitializer Rollback<TRollback>(Action<IContext, TRollback> rollbackResponse)
+        {
             _manager.RegisterRollbackStep(typeof(TRollback), (c, m) => rollbackResponse(c, (TRollback)m));
             return this;
         }
@@ -71,5 +71,7 @@ namespace Saga.StateMachine
 
             _initCall(context);
         }
+
+
     }
 }
