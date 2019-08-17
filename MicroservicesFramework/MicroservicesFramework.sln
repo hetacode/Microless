@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hetacode.Microless.Abstract
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hetacode.Microless.RabbitMQ", "Hetacode.Microless.RabbitMQ\Hetacode.Microless.RabbitMQ.csproj", "{3AD7AC97-70FA-43B4-A67E-28397858D159}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service1", "Service1\Service1.csproj", "{FAD2059A-A159-4332-B1FD-EE2E4CDD78AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service2", "Service2\Service2.csproj", "{889F1F7A-23AC-45D3-9877-19D868B6440B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,5 +47,13 @@ Global
 		{3AD7AC97-70FA-43B4-A67E-28397858D159}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AD7AC97-70FA-43B4-A67E-28397858D159}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AD7AC97-70FA-43B4-A67E-28397858D159}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAD2059A-A159-4332-B1FD-EE2E4CDD78AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAD2059A-A159-4332-B1FD-EE2E4CDD78AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAD2059A-A159-4332-B1FD-EE2E4CDD78AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAD2059A-A159-4332-B1FD-EE2E4CDD78AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{889F1F7A-23AC-45D3-9877-19D868B6440B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{889F1F7A-23AC-45D3-9877-19D868B6440B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{889F1F7A-23AC-45D3-9877-19D868B6440B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{889F1F7A-23AC-45D3-9877-19D868B6440B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

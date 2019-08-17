@@ -1,8 +1,12 @@
 ﻿using System;
 namespace Contracts
 {
-    public class MessageResponse
+    public class Message2Response
     {
+        public Message2Response()
+        {
+        }
+
         public DateTime Time { get; set; }
     }
 }

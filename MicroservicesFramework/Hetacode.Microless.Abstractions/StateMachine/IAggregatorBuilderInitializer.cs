@@ -8,6 +8,10 @@ namespace Hetacode.Microless.Abstractions.StateMachine
     {
         IAggregatorBuilderInitializer Step<TMessage>(Action<IContext, TMessage> response);
 
+        IAggregatorBuilderInitializer Error<TError>(Action<IContext, TError> error);
+
+        IAggregatorBuilderInitializer Rollback<TRollback>(Action<IContext, TRollback> rollbackResponse);
+
         IAggregatorBuilderInitializer Finish<TMessage>(Action<IContext, TMessage> response);
 
         IAggregatorBuilderInitializer Finish();

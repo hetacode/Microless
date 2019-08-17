@@ -17,11 +17,47 @@ namespace Saga.Sagas
             {
                 var id = Guid.NewGuid();
                 Console.WriteLine($"Init saga: {id}");
-                c.SendResponse<MessageRequest>("Service", new MessageRequest { CorrelationId = id });
+                c.SendMessage<MessageRequest>("Service", new MessageRequest());
+            })
+            .Error<MessageError>((c, e) =>
+            {
+                Console.WriteLine($"Init error id: {c.CorrelationId}");
+            })
+            .Rollback<MessageRequest>((c, e) =>
+            {
+                Console.WriteLine($"Rollback finished id: {c.CorrelationId}");
             })
             .Step<MessageResponse>((c, r) =>
             {
-                Console.WriteLine($"Response saga: {r.CorrelationId}");
+                Console.WriteLine($"Response1 saga: {c.CorrelationId}");
+                c.SendMessage<Message1Request>("Service1", new Message1Request());
+            })
+            .Error<Message1Error>((c, e) =>
+            {
+                Console.WriteLine($"Step 1 error id: {c.CorrelationId}");
+            })
+            .Rollback<Message1Request>((c, e) =>
+            {
+                Console.WriteLine($"Rollback step1 id: {c.CorrelationId}");
+                c.SendRollback<MessageRequest>("Service", new MessageRequest());
+            })
+            .Step<Message1Response>((c, r) =>
+            {
+                Console.WriteLine($"Response2 saga: {c.CorrelationId}");
+                c.SendMessage<Message2Request>("Service2", new Message2Request());
+            })
+            .Error<Message2Error>((c, e) =>
+            {
+                Console.WriteLine($"Step 2 error id: {c.CorrelationId}");
+                c.SendRollback<Message1Request>("Service1", new Message1Request());
+            })
+            .Rollback<Message2Request>((c, e) =>
+            {
+                Console.WriteLine($"Rollback step 2 id: {c.CorrelationId}");
+            })
+            .Finish<Message2Response>((c, r) =>
+            {
+                Console.WriteLine($"Finish saga: {c.CorrelationId}");
             });
         }
 

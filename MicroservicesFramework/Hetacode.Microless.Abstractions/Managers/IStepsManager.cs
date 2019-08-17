@@ -9,8 +9,10 @@ namespace Hetacode.Microless.Abstractions.Managers
     {
         void RegisterStep(Type stepType, Action<IContext, object> action);
 
-        void Call<TMessage>(TMessage message, Dictionary<string, string> headers = null);
+        void RegisterRollbackStep(Type stepType, Action<IContext, object> action);
 
-        void InitCall<TAggregator>(Dictionary<string, string> headers = null) where TAggregator : IAggregator;
+        void Call<TMessage>(string queueName, TMessage message, Dictionary<string, string> headers = null);
+
+        void InitCall<TAggregator>(string queueName, Dictionary<string, string> headers = null) where TAggregator : IAggregator;
     }
 }

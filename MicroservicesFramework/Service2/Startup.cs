@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hetacode.Microless.Abstractions.Managers;
-using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Extensions;
 using Hetacode.Microless.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
@@ -11,10 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Saga.Sagas;
-using Saga.StateMachine;
 
-namespace Saga
+namespace Service2
 {
     public class Startup
     {
@@ -38,27 +34,22 @@ namespace Saga
             }
 
             app.UseRouting();
+            app.UseMicroless();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    using (var scope = endpoints.ServiceProvider.CreateScope())
-                    {
-                        var manager = scope.ServiceProvider.GetService<IStepsManager>();
-                        manager.InitCall<TestMessagesSaga>("Saga");
-                    }
+                    await context.Response.WriteAsync("Hello World!");
                 });
             });
-            app.UseMessageBus((steps, subscribe) =>
+            app.UseMessageBus((functions, subscribe) =>
             {
-                subscribe.AddReceiver("Saga", async (queueName, message, headers) =>
+                subscribe.AddReceiver("Service2", async (queueName, message, headers) =>
                 {
-                    steps.Call(queueName, message, headers);
+                    await functions.CallFunction(queueName, message, headers);
                 });
             });
-
-            _ = app.ApplicationServices.GetService<TestMessagesSaga>();
         }
     }
 }

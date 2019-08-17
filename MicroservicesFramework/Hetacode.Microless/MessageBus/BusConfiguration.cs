@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using Hetacode.Microless.Abstractions.Filters;
 using Hetacode.Microless.Abstractions.Managers;
 using Hetacode.Microless.Abstractions.MessageBus;
@@ -30,7 +31,7 @@ namespace Hetacode.Microless.MessageBus
 
         public IFiltersManager Filters { get; }
 
-        public void AddReceiver(string name, Action<object, Dictionary<string, string>> messageCallback)
+        public void AddReceiver(string name, Func<string, object, Dictionary<string, string>, Task> messageCallback)
         {
             Provider.AddReceiver(name, async (json, headers) =>
             {
@@ -41,7 +42,7 @@ namespace Hetacode.Microless.MessageBus
 
                 message = await Filters.ProcessIncoming(message);
 
-                messageCallback(message, headers);
+                await messageCallback(name, message, headers);
             });
         }
 

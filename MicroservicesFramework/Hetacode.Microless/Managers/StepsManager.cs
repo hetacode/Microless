@@ -12,6 +12,8 @@ namespace Hetacode.Microless.Managers
     public class StepsManager : IStepsManager
     {
         private Dictionary<Type, Action<IContext, object>> _steps = new Dictionary<Type, Action<IContext, object>>();
+        private Dictionary<Type, Action<IContext, object>> _rollbackSteps = new Dictionary<Type, Action<IContext, object>>();
+
         private readonly IServiceProvider _services;
         private readonly IBusSubscriptions _bus;
 
@@ -28,17 +30,35 @@ namespace Hetacode.Microless.Managers
             _steps.Add(stepType, action);
         }
 
-        public void Call<TMessage>(TMessage message, Dictionary<string, string> headers = null)
+        public void RegisterRollbackStep(Type stepType, Action<IContext, object> action)
         {
-            var context = new Context(_bus);
-            context.Headers = headers;
-            _steps[message.GetType()](context, message);
+            _rollbackSteps.Add(stepType, action);
         }
 
-        public void InitCall<TAggregator>(Dictionary<string, string> headers = null) where TAggregator : IAggregator
+        public void Call<TMessage>(string queueName, TMessage message, Dictionary<string, string> headers = null)
         {
             var context = new Context(_bus);
             context.Headers = headers;
+            context.CorrelationId = context.GetCorrelationIdFromHeader();
+            context.GetSenderFromHeader();
+            context.SetSenderToHeader(queueName);
+
+            if (context.IsRollbackDone)
+            {
+                _rollbackSteps[message.GetType()](context, message);
+            }
+            else
+            {
+                _steps[message.GetType()](context, message);
+            }
+        }
+
+        public void InitCall<TAggregator>(string queueName, Dictionary<string, string> headers = null) where TAggregator : IAggregator
+        {
+            var context = new Context(_bus);
+            context.Headers = headers;
+            context.CorrelationId = context.GetCorrelationIdFromHeader();
+            context.SetSenderToHeader(queueName);
             var aggregator = _services.GetService<TAggregator>();
             aggregator.Run(context);
 

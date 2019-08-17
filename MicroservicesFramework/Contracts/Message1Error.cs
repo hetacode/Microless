@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Contracts
 {
-    public class MessageRequest
+    public class Message1Error
     {
     }
 }

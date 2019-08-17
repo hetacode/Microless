@@ -12,7 +12,7 @@ namespace Hetacode.Microless.Managers
 {
     public class FunctionsManager : IFunctionsManager
     {
-        private readonly Dictionary<Type, MethodInfo> _functions = new Dictionary<Type, MethodInfo>();
+        private readonly Dictionary<(Type, string), MethodInfo> _functions = new Dictionary<(Type, string), MethodInfo>();
         private readonly IServiceProvider _services;
 
         public FunctionsManager(IServiceProvider service) => _services = service;
@@ -21,29 +21,40 @@ namespace Hetacode.Microless.Managers
         {
             var methods = Assembly.GetEntryAssembly()
                                   .GetTypes()
-                                  .SelectMany(a => a.GetMethods())
                                   .Where(w => w.GetCustomAttributes().Any(a => a.GetType() == typeof(BindMessageAttribute)))
-                                  .Select(s => new { Function = s, Attribute = s.GetCustomAttribute<BindMessageAttribute>() })
+                                  .SelectMany(a => a.GetMethods().Where(w => w.Name == "Run" || w.Name == "Rollback"))
+                                  .Select(s => new { Function = s, Attribute = s.DeclaringType.GetCustomAttribute<BindMessageAttribute>() })
                                   .ToList();
 
             methods.ForEach(f =>
             {
-                _functions.Add(f.Attribute.MessageType, f.Function);
+                _functions.Add((f.Attribute.MessageType, f.Function.Name), f.Function);
             });
         }
 
-        public async Task CallFunction<T>(T message, Dictionary<string, string> headers = null)
+        public async Task CallFunction<T>(string callerName, T message, Dictionary<string, string> headers = null)
         {
-            var method = _functions[message.GetType()];
-            var serviceType = method.DeclaringType;
+
             using (var scope = _services.CreateScope())
             {
                 var busSubscriptions = scope.ServiceProvider.GetService<IBusSubscriptions>();
-                var functionInstance = scope.ServiceProvider.GetService(serviceType);
                 var context = new Context(busSubscriptions);
                 context.Headers = headers;
+                context.CorrelationId = context.GetCorrelationIdFromHeader();
+                context.GetSenderFromHeader();
+
+                var subKey = context.IsRollback ? "Rollback" : "Run";
+                var method = _functions[(message.GetType(), subKey)];
+                var serviceType = method.DeclaringType;
+                var functionInstance = scope.ServiceProvider.GetService(serviceType);
                 var parameters = new object[] { context, message };
-                var result = await (dynamic)method.Invoke(functionInstance, parameters);
+                await (dynamic)method.Invoke(functionInstance, parameters);
+                context.SetSenderToHeader(callerName);
+                if (context.IsRollback)
+                {
+                    context.SetMessageAsRollbackDone();
+                    context.SendMessage<T>(context.Sender, message, context.Headers); // How to get sender's queue?
+                }
             }
         }
     }

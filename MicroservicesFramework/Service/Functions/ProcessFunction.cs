@@ -8,14 +8,19 @@ using Newtonsoft.Json;
 
 namespace Service.Functions
 {
+    [BindMessage(typeof(MessageRequest))]
     public class ProcessFunction
     {
-        [BindMessage(typeof(MessageRequest))]
         public async Task Run(Context context, MessageRequest message)
         {
-            Console.WriteLine($"ProcessFunction called : {message.CorrelationId} - {JsonConvert.SerializeObject(context.Headers)}");
+            Console.WriteLine($"ProcessFunction called : {context.CorrelationId} - {JsonConvert.SerializeObject(context.Headers)}");
 
-            context.SendResponse("Saga", new MessageResponse { CorrelationId = message.CorrelationId, Time = DateTime.Now }, context.Headers);
+            context.SendMessage("Saga", new MessageResponse { Time = DateTime.Now }, context.Headers);
+        }
+
+        public async Task Rollback(Context context, MessageRequest message)
+        {
+            Console.WriteLine($"ProcessFunction rollback : {context.CorrelationId} - {JsonConvert.SerializeObject(context.Headers)}");
         }
     }
 }
