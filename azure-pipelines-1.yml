@@ -1,0 +1,28 @@
+pool:
+  name: Azure Pipelines
+#Your build pipeline references an undefined variable named ‘Parameters.RestoreBuildProjects’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Use .Net Core sdk 3.0.100-preview7-012821'
+  inputs:
+    version: '3.0.100-preview7-012821'
+
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: '$(Parameters.RestoreBuildProjects)'
+
+- task: DotNetCoreCLI@2
+  displayName: Pack
+  inputs:
+    command: pack
+    packagesToPack: '*/Hetacode.*/*.csproj'
+    versioningScheme: byBuildNumber
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: push
+    publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
