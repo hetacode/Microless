@@ -26,6 +26,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
+    publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
     publishWebProjects: false
 
 # - task: DotNetCoreCLI@2
