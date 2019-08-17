@@ -14,16 +14,19 @@ steps:
     version: '3.0.100-preview7-012821'
     includePreviewVersions: true
 - task: DotNetCoreCLI@2
+  name: Restore
   inputs:
     command: 'restore'
     projects: '*/Hetacode.*/*.csproj'
     feedsToUse: 'select'
 - task: DotNetCoreCLI@2
+  name: Pack
   inputs:
     command: 'pack'
     packagesToPack: '*/Hetacode.*/*.csproj'
     versioningScheme: 'byBuildNumber'
 - task: DotNetCoreCLI@2
+  name: Push
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
