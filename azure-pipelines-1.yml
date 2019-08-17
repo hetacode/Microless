@@ -8,25 +8,27 @@ variables:
   buildConfiguration: 'Release'
 steps:
 - task: UseDotNet@2
-  displayName: 'Use .Net Core sdk 3.0.100-preview7-012821'
   inputs:
+    packageType: 'sdk'
     version: '3.0.100-preview7-012821'
-
+    includePreviewVersions: true
 - task: DotNetCoreCLI@2
-  displayName: Restore
   inputs:
-    command: restore
-    projects: '$(Parameters.RestoreBuildProjects)'
-
+    command: 'restore'
+    projects: '*/Hetacode.*/*.csproj'
+    feedsToUse: 'select'
 - task: DotNetCoreCLI@2
-  displayName: Pack
   inputs:
-    command: pack
+    command: 'pack'
     packagesToPack: '*/Hetacode.*/*.csproj'
-    versioningScheme: byBuildNumber
-
+    versioningScheme: 'byBuildNumber'
 - task: DotNetCoreCLI@2
-  displayName: Publish
   inputs:
-    command: push
-    publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
+    command: 'publish'
+    publishWebProjects: false
+
+# - task: DotNetCoreCLI@2
+#   displayName: Publish
+#   inputs:
+#     command: push
+#     publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
