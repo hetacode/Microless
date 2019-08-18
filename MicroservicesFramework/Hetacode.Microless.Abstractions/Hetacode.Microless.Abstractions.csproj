@@ -6,7 +6,6 @@
         <Authors>Sebastian G.</Authors>
         <Company>Hetacode</Company>
         <RepositoryUrl>https://github.com/hetacode/Microless</RepositoryUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
     <ItemGroup>
         <Folder Include="MessageBus\" />
