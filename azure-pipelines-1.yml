@@ -25,10 +25,19 @@ steps:
     command: 'pack'
     packagesToPack: '*/Hetacode.*/*.csproj'
     versioningScheme: 'byBuildNumber'
+# - task: DotNetCoreCLI@2
+#   name: Push
+#   inputs:
+#     command: 'push'
+#     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+#     nuGetFeedType: 'internal'
+#     publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
 - task: DotNetCoreCLI@2
-  name: Push
+  displayName: Push Nuget Package
   inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
+    command: custom
+    custom: nuget
+    arguments: >
+      push $(Build.ArtifactStagingDirectory)/*.nupkg
+      -s https://api.nuget.org/v3/
+      -k $(nuget_key)
