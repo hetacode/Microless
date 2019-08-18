@@ -32,12 +32,12 @@ steps:
 #     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
 #     nuGetFeedType: 'internal'
 #     publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
-- task: DotNetCoreCLI@2
-  displayName: Push Nuget Package
-  inputs:
-    command: custom
-    custom: nuget
-    arguments: >
-      push $(Build.ArtifactStagingDirectory)/*.nupkg
-      -s https://api.nuget.org/v3/index.json
-      -k $(nuget_key)
+# - task: DotNetCoreCLI@2
+#   displayName: Push Nuget Package
+#   inputs:
+#     command: custom
+#     custom: nuget
+#     arguments: >
+#       push $(Build.ArtifactStagingDirectory)/*.nupkg
+#       -s https://api.nuget.org/v3/index.json
+#       -k $(nuget_key)
