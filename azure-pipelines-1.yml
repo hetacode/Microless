@@ -1,0 +1,43 @@
+name: 1.0.0$(rev:.r)
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3.0.100-preview7-012821'
+    includePreviewVersions: true
+- task: DotNetCoreCLI@2
+  name: Restore
+  inputs:
+    command: 'restore'
+    projects: '*/Hetacode.*/*.csproj'
+    feedsToUse: 'select'
+- task: DotNetCoreCLI@2
+  name: Pack
+  inputs:
+    command: 'pack'
+    packagesToPack: '*/Hetacode.*/*.csproj'
+    versioningScheme: 'byBuildNumber'
+# - task: DotNetCoreCLI@2
+#   name: Push
+#   inputs:
+#     command: 'push'
+#     packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+#     nuGetFeedType: 'internal'
+#     publishVstsFeed: '52a7c98e-8d7f-4bdf-b79f-8f96e7bd8012'
+- task: DotNetCoreCLI@2
+  displayName: Push Nuget Package
+  inputs:
+    command: custom
+    custom: nuget
+    arguments: >
+      push $(Build.ArtifactStagingDirectory)/*.nupkg
+      -s https://api.nuget.org/v3/index.json
+      -k $(nuget_key)
