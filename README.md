@@ -35,9 +35,9 @@ app.UseMessageBus((steps, subscribe) =>
 ```
 4. In this step you have to define next purpose:
 **For steps aggregator**
-a) Create aggregator class. This class should implement IAggregator interface
-b) Inject IAggregatorBuilder service
-c) Register your steps like this (basic version - without handling errors and rollbacks):
+  - Create aggregator class. This class should implement IAggregator interface
+  - Inject IAggregatorBuilder service
+  - Register your steps like this (basic version - without handling errors and rollbacks):
 ```
 public TestAggregator(IAggregatorBuilder states)
 {
@@ -73,23 +73,23 @@ public void Run(IContext context)
 _states.Call(context);
 }
  ```
-d) back to Startup.cs - it's time to connect steps resolver to messages consumer
+  - back to Startup.cs - it's time to connect steps resolver to messages consumer
 So, just change this line <Put "message resolver" code here> to 
 ```
 steps.Call(queueName, message, headers);
 ```
 That's all!
 **For the service side**
-a) Create function - it's just an class with two async methods: "Run" and "Rollback"
-b) Add an attribute:
+  - Create function - it's just an class with two async methods: "Run" and "Rollback"
+  - Add an attribute:
 ```
 [BindMessage(typeof(MessageRequest))]
 ```
 The attribute bind your function with receiving message.
-c) Run method is responsible for logic of function.
-d) Rollback responds rollback logic
-e) Both methods pass "context" parameter (look at "Context" section)
-f) Like in "Aggregator" approach, please change <Put "message resolver" code here> in Startup.cs file.
+  - Run method is responsible for logic of function.
+  - Rollback responds rollback logic
+  - Both methods pass "context" parameter (look at "Context" section)
+  - Like in "Aggregator" approach, please change <Put "message resolver" code here> in Startup.cs file.
 But in this case use this line:
 ```
 await steps.CallFunction(queueName, message, headers);
