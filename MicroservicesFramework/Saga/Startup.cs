@@ -50,7 +50,7 @@ namespace Saga
                     }
                 });
             });
-            app.UseMessageBus((steps, subscribe) =>
+            app.UseMessageBusAggregators((steps, subscribe) =>
             {
                 subscribe.AddReceiver("Saga", async (queueName, message, headers) =>
                 {

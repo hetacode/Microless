@@ -68,7 +68,7 @@ namespace Hetacode.Microless.Extensions
             }
         }
 
-        public static void UseMessageBus(this IApplicationBuilder app, Action<IFunctionsManager, IBusSubscriptions> subscribe)
+        public static void UseMessageBusFunctions(this IApplicationBuilder app, Action<IFunctionsManager, IBusSubscriptions> subscribe)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -79,7 +79,7 @@ namespace Hetacode.Microless.Extensions
             }
         }
 
-        public static void UseMessageBus(this IApplicationBuilder app, Action<IStepsManager, IBusSubscriptions> subscribe)
+        public static void UseMessageBusAggregators(this IApplicationBuilder app, Action<IStepsManager, IBusSubscriptions> subscribe)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
