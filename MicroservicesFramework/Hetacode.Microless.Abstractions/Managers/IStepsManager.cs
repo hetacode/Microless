@@ -13,6 +13,8 @@ namespace Hetacode.Microless.Abstractions.Managers
 
         void Call<TMessage>(string queueName, TMessage message, Dictionary<string, string> headers = null);
 
-        void InitCall<TAggregator>(string queueName, Dictionary<string, string> headers = null) where TAggregator : IAggregator;
+        //void InitCall<TAggregator>(string queueName, Dictionary<string, string> headers = null) where TAggregator : IAggregator<Object>;
+
+        void InitCall<TAggregator, TInput>(string queueName, TInput input, Dictionary<string, string> headers = null) where TAggregator : IAggregator<TInput>;
     }
 }

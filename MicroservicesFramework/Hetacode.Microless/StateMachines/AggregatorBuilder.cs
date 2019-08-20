@@ -14,7 +14,7 @@ namespace Saga.StateMachine
     {
         private readonly IStepsManager _manager;
         private readonly IBusSubscriptions _bus;
-        private Action<IContext> _initCall;
+        private Action<IContext, object> _initCall;
         private Action<IContext, object> _initError;
 
         public AggregatorBuilder(IStepsManager manager, IBusSubscriptions bus)
@@ -30,9 +30,9 @@ namespace Saga.StateMachine
             return this;
         }
 
-        public IAggregatorBuilderInitializer Init(Action<IContext> init)
+        public IAggregatorBuilderInitializer InitCall<TInput>(Action<IContext, TInput> init)
         {
-            _initCall = init;
+            _initCall = (c, a) => init(c, (TInput)a);
             return this;
         }
 
@@ -65,11 +65,11 @@ namespace Saga.StateMachine
             return this;
         }
 
-        public void Call(IContext context)
+        public void Call<TInput>(IContext context, TInput input)
         {
             context.CorrelationId = Guid.NewGuid();
 
-            _initCall(context);
+            _initCall(context, input);
         }
 
 

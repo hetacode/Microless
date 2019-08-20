@@ -5,6 +5,7 @@ using Hetacode.Microless.Abstractions.Filters;
 using Hetacode.Microless.Abstractions.Managers;
 using Hetacode.Microless.Abstractions.MessageBus;
 using Hetacode.Microless.Abstractions.StateMachine;
+using Hetacode.Microless.Attributes;
 using Hetacode.Microless.Managers;
 using Hetacode.Microless.MessageBus;
 using Microsoft.AspNetCore.Builder;
@@ -28,7 +29,7 @@ namespace Hetacode.Microless.Extensions
                                 .WithTransientLifetime());
             // Register all Aggregators
             services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-                                .AddClasses(c => c.Where(w => w.GetInterfaces().Any(i => i == typeof(IAggregator))))
+                                .AddClasses(c => c.Where(w => w.GetCustomAttributes().Any(i => i.GetType() == typeof(AggregatorAttribute))))
                                 .AsSelfWithInterfaces()
                                 .WithSingletonLifetime());
         }
@@ -64,7 +65,14 @@ namespace Hetacode.Microless.Extensions
                 scope.ServiceProvider.GetService<IFunctionsManager>().ScaffoldFunctions();
 
                 // Initialize all aggregators
-                scope.ServiceProvider.GetServices<IAggregator>();
+                AppDomain.CurrentDomain.GetAssemblies().ToList().ForEach(a =>
+                {
+                    var types = a.GetTypes().Where(w => w.GetCustomAttributes().Any(i => i.GetType() == typeof(AggregatorAttribute))).ToList();
+                    types.ForEach(f =>
+                    {
+                        scope.ServiceProvider.GetService(f);
+                    });
+                });
             }
         }
 

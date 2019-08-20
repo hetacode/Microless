@@ -53,15 +53,25 @@ namespace Hetacode.Microless.Managers
             }
         }
 
-        public void InitCall<TAggregator>(string queueName, Dictionary<string, string> headers = null) where TAggregator : IAggregator
+        //public void InitCall<TAggregator>(string queueName, Dictionary<string, string> headers = null) where TAggregator : IAggregator
+        //{
+        //    var context = new Context(_bus);
+        //    context.Headers = headers;
+        //    context.CorrelationId = context.GetCorrelationIdFromHeader();
+        //    context.SetSenderToHeader(queueName);
+        //    var aggregator = _services.GetService<TAggregator>();
+        //    aggregator.Run(context);
+
+        //}
+
+        public void InitCall<TAggregator, TInput>(string queueName, TInput input, Dictionary<string, string> headers = null) where TAggregator : IAggregator<TInput>
         {
             var context = new Context(_bus);
             context.Headers = headers;
             context.CorrelationId = context.GetCorrelationIdFromHeader();
             context.SetSenderToHeader(queueName);
             var aggregator = _services.GetService<TAggregator>();
-            aggregator.Run(context);
-
+            aggregator.Run(context, input);
         }
     }
 }
