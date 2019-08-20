@@ -24,6 +24,7 @@ services.AddMessageBus(config =>
 ```
   - And then in Configure method:
 ```
+app.UseMicroless();
 app.UseMessageBus((steps, subscribe) =>
 {
 // Add messages listener - in this example, this one is listening on "Saga" queue and return <queue name - "Saga"> <message object> <transmitted headers>
