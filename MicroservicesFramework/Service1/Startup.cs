@@ -43,7 +43,7 @@ namespace Service1
                     await context.Response.WriteAsync("Hello World!");
                 });
             });
-            app.UseMessageBus((functions, subscribe) =>
+            app.UseMessageBusFunctions((functions, subscribe) =>
             {
                 subscribe.AddReceiver("Service1", async (queueName, message, headers) =>
                 {
