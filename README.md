@@ -82,6 +82,7 @@ steps.Call(queueName, message, headers);
 That's all!
 **For the service side**
   - Create function - it's just an class with two async methods: "Run" and "Rollback"
+> Important! Function class should be named in this pattern "<Name>Function"
   - Add an attribute:
 ```
 [BindMessage(typeof(MessageRequest))]
