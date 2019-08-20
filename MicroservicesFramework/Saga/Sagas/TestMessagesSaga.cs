@@ -7,16 +7,18 @@ using Saga.StateMachine;
 
 namespace Saga.Sagas
 {
-    public class TestMessagesSaga : IAggregator
+    [Aggregator]
+    public class TestMessagesSaga : IAggregator<int>
     {
         private readonly IAggregatorBuilderInitializer _states;
 
         public TestMessagesSaga(IAggregatorBuilder states)
         {
-            _states = states.Init(c =>
+            _states = states.InitCall<int>((c, i) =>
             {
                 var id = Guid.NewGuid();
-                Console.WriteLine($"Init saga: {id}");
+
+                Console.WriteLine($"Init saga: {id} - Input: {i}");
                 c.SendMessage<MessageRequest>("Service", new MessageRequest());
             })
             .Error<MessageError>((c, e) =>
@@ -61,9 +63,9 @@ namespace Saga.Sagas
             });
         }
 
-        public void Run(IContext context)
+        public void Run(IContext context, int input)
         {
-            _states.Call(context);
+            _states.Call(context, input);
         }
     }
 }

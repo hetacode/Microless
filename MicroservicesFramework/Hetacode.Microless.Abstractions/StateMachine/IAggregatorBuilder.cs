@@ -7,6 +7,6 @@ namespace Hetacode.Microless.Abstractions.StateMachine
     {
         IAggregatorBuilderInitializer Init<TMessage>(Action<IContext, TMessage> response);
 
-        IAggregatorBuilderInitializer Init(Action<IContext> init);
+        IAggregatorBuilderInitializer InitCall<TInput>(Action<IContext, TInput> init);
     }
 }

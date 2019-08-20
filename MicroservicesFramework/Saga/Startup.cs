@@ -38,6 +38,7 @@ namespace Saga
             }
 
             app.UseRouting();
+            app.UseMicroless();
 
             app.UseEndpoints(endpoints =>
             {
@@ -46,7 +47,7 @@ namespace Saga
                     using (var scope = endpoints.ServiceProvider.CreateScope())
                     {
                         var manager = scope.ServiceProvider.GetService<IStepsManager>();
-                        manager.InitCall<TestMessagesSaga>("Saga");
+                        manager.InitCall<TestMessagesSaga, int>("Saga", 100);
                     }
                 });
             });
@@ -57,8 +58,6 @@ namespace Saga
                     steps.Call(queueName, message, headers);
                 });
             });
-
-            _ = app.ApplicationServices.GetService<TestMessagesSaga>();
         }
     }
 }
