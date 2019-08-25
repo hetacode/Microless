@@ -8,7 +8,9 @@ using Hetacode.Microless.Abstractions.StateMachine;
 using Hetacode.Microless.Attributes;
 using Hetacode.Microless.Managers;
 using Hetacode.Microless.MessageBus;
+using Hetacode.Microless.Middlewares;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Saga.StateMachine;
 
@@ -21,6 +23,7 @@ namespace Hetacode.Microless.Extensions
             services.AddSingleton<IFunctionsManager, FunctionsManager>();
             services.AddSingleton<IStepsManager, StepsManager>();
             services.AddSingleton<IAggregatorBuilder, AggregatorBuilder>();
+            services.AddSingleton<IHttpManager, HttpManager>();
 
             // Register all Functions
             services.Scan(s => s.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
@@ -74,6 +77,15 @@ namespace Hetacode.Microless.Extensions
                     });
                 });
             }
+        }
+
+        public static void UseMicrolessHttpEndpoint(this IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                scope.ServiceProvider.GetService<IHttpManager>().Init();
+            }
+            app.UseMiddleware<HttpCallFunctionMiddleware>();
         }
 
         public static void UseMessageBusFunctions(this IApplicationBuilder app, Action<IFunctionsManager, IBusSubscriptions> subscribe)
