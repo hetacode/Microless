@@ -3,23 +3,25 @@ using Contracts;
 using Hetacode.Microless.Abstractions.Messaging;
 using Hetacode.Microless.Abstractions.StateMachine;
 using Hetacode.Microless.Attributes;
+using Hetacode.Microless.Enums;
 using Saga.StateMachine;
 
 namespace Saga.Sagas
 {
+    [HttpRequest("/test", "Saga", HttpMethod.POST, typeof(MessageRequest))]
     [Aggregator]
-    public class TestMessagesSaga : IAggregator<int>
+    public class TestMessagesSaga : IAggregator<MessageRequest>
     {
         private readonly IAggregatorBuilderInitializer _states;
 
         public TestMessagesSaga(IAggregatorBuilder states)
         {
-            _states = states.InitCall<int>((c, i) =>
+            _states = states.InitCall<MessageRequest>((c, i) =>
             {
                 var id = Guid.NewGuid();
 
                 Console.WriteLine($"Init saga: {id} - Input: {i}");
-                c.SendMessage<MessageRequest>("Service", new MessageRequest());
+                c.SendMessage<MessageRequest>("Service", i);
             })
             .Error<MessageError>((c, e) =>
             {
@@ -63,7 +65,7 @@ namespace Saga.Sagas
             });
         }
 
-        public void Run(IContext context, int input)
+        public void Run(IContext context, MessageRequest input)
         {
             _states.Call(context, input);
         }

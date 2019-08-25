@@ -20,5 +20,7 @@ namespace Hetacode.Microless.Abstractions.Messaging
         void SendError<T>(string name, T message, Dictionary<string, string> headers = null);
 
         void SendRollback<T>(string name, T message);
+
+        void HttpResponse<T>(T message, Dictionary<string, string> headers = null);
     }
 }

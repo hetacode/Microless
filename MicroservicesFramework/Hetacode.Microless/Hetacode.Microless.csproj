@@ -9,24 +9,25 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Remove="Class1.cs" />
-    </ItemGroup>
-    <ItemGroup>
         <Folder Include="Attributes\" />
         <Folder Include="Managers\" />
         <Folder Include="Extensions\" />
         <Folder Include="MessageBus\" />
-        <Folder Include="Filters\" />
         <Folder Include="StateMachines\" />
         <Folder Include="Exceptions\" />
+        <Folder Include="Middlewares\" />
+        <Folder Include="Enums\" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0-preview7.19362.4" />
-        <PackageReference Include="Scrutor" Version="3.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-        <PackageReference Include="Microsoft.CSharp" Version="4.6.0-preview7.19362.9" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.0.0-preview8.19405.4" />
+        <PackageReference Include="Scrutor" Version="3.1.0" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.6.0-preview8.19405.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Hetacode.Microless.Abstractions\Hetacode.Microless.Abstractions.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Microsoft.AspNetCore.Http.Features, Version=3.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" />
     </ItemGroup>
 </Project>

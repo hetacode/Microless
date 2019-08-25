@@ -23,6 +23,8 @@ namespace Hetacode.Microless
 
         public Dictionary<string, string> Headers { get; set; }
 
+        public Action<object, Dictionary<string, string>> ResponseActionDelegate { get; set; }
+
         public bool IsRollback
         {
             get
@@ -132,6 +134,16 @@ namespace Hetacode.Microless
                 headers.Add(SENDER_KEY, Headers[SENDER_KEY]);
             }
             _subscription.Send(name, message, headers);
+        }
+
+        public void HttpResponse<T>(T message, Dictionary<string, string> headers = null)
+        {
+            if (ResponseActionDelegate == null)
+            {
+                return;
+            }
+
+            ResponseActionDelegate(message, headers);
         }
     }
 }

@@ -35,14 +35,8 @@ namespace Service1
 
             app.UseRouting();
             app.UseMicroless();
+            app.UseMicrolessHttpEndpoint();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
-            });
             app.UseMessageBusFunctions((functions, subscribe) =>
             {
                 subscribe.AddReceiver("Service1", async (queueName, message, headers) =>
