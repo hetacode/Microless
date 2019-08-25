@@ -39,7 +39,7 @@ namespace Hetacode.Microless.Managers
 
         }
 
-        public async void ResolveAndCall(string endpoint, string body, Dictionary<string, string> headers)
+        public async void ResolveAndCall(string endpoint, string body, Dictionary<string, string> headers, Action<object, Dictionary<string, string>> responseAction)
         {
             if (!_callers.ContainsKey(endpoint))
             {
@@ -55,6 +55,7 @@ namespace Hetacode.Microless.Managers
                 var method = instance.GetType().GetMethods().First(m => m.Name == "Run");
                 var serviceType = method.DeclaringType;
                 var context = new Context(_subscriptions);
+                context.ResponseActionDelegate = responseAction;
                 context.Headers = headers;
                 context.CorrelationId = context.GetCorrelationIdFromHeader();
                 context.SetSenderToHeader(caller.attribute.QueueName);
@@ -69,6 +70,7 @@ namespace Hetacode.Microless.Managers
                 var serviceType = method.DeclaringType;
                 var context = new Context(_subscriptions);
                 context.Headers = headers;
+                context.ResponseActionDelegate = responseAction;
                 context.CorrelationId = context.GetCorrelationIdFromHeader();
                 context.SetSenderToHeader(caller.attribute.QueueName);
                 var parameters = new object[] { context, message };

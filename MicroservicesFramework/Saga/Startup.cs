@@ -41,29 +41,6 @@ namespace Saga
             app.UseMicroless();
             app.UseMicrolessHttpEndpoint();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapGet("/", async context =>
-            //    {
-            //        using (var scope = endpoints.ServiceProvider.CreateScope())
-            //        {
-            //            var manager = scope.ServiceProvider.GetService<IStepsManager>();
-            //            manager.InitCall<TestMessagesSaga, int>("Saga", 100);
-            //        }
-            //    });
-            //});
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapGet("/ehes", async context =>
-            //    {
-            //        using (var scope = endpoints.ServiceProvider.CreateScope())
-            //        {
-            //            var manager = scope.ServiceProvider.GetService<IStepsManager>();
-            //            manager.InitCall<TestMessagesSaga, int>("Saga", 100);
-            //        }
-            //    });
-            //});
 
             app.UseMessageBusAggregators((steps, subscribe) =>
             {

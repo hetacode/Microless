@@ -7,6 +7,9 @@ namespace Hetacode.Microless.Abstractions.Managers
     {
         void Init();
 
-        void ResolveAndCall(string endpoint, string body, Dictionary<string, string> headers);
+        void ResolveAndCall(string endpoint,
+                            string body,
+                            Dictionary<string, string> headers,
+                            Action<object, Dictionary<string, string>> responseAction);
     }
 }
