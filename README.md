@@ -1,6 +1,7 @@
 # Introduction 
 Microless is an library to simplify maintanence of communication between microservices. Using this library you're getting ability to create state machine (simple implementation of saga pattern) which it handle sending and receiving messages from services connected to an message bus (prepared rabbitmq provider).
 The library also give ability to create simple "function" implementation. Each coming message is handle by embedded mechanism of library, which recognize message type and then call proper function with implemented logic.
+**Only for testing (no production ready)**
 
 # Getting Started
 The library is created for .Net Core 3 Preview 7. 
